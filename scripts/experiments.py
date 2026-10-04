@@ -13,9 +13,10 @@ from lilylake.config import Config
 from lilylake.data import generate_dataset
 from lilylake.evaluation import evaluate_notes
 from lilylake.inference import transcribe_audio
+from lilylake.models import EventModel
 from lilylake.music.schema import Piece
 from lilylake.rendering import render_midi
-from lilylake.training import MusicDataset, evaluate_model, train
+from lilylake.training import MusicDataset, evaluate_model, load_checkpoint, train
 
 
 def main():
@@ -36,7 +37,9 @@ def main():
         validation_interval=10,
     )
     generate_dataset(root / "piano", 96, 1000, 1, instruments=["grand_piano"])
-    model, _ = train(root / "piano/manifest.jsonl", root / "piano-run", config)
+    train(root / "piano/manifest.jsonl", root / "piano-run", config)
+    model = EventModel(config)
+    model.load_state_dict(load_checkpoint(root / "piano-run/best.pt")["model"])
     reports = {}
     reports["piano_heldout"] = evaluate_model(
         model, MusicDataset(root / "piano/manifest.jsonl", config, "test"), config
@@ -56,9 +59,11 @@ def main():
         manifests.append(root / "sampled/manifest.jsonl")
     merge_manifests(manifests, root / "combined.jsonl")
     config = Config(**{**config.to_dict(), "epochs": args.mixture_epochs})
-    mixed, _ = train(
+    train(
         root / "combined.jsonl", root / "mixture-run", config, initialize=root / "piano-run/best.pt"
     )
+    mixed = EventModel(config)
+    mixed.load_state_dict(load_checkpoint(root / "mixture-run/best.pt")["model"])
     reports["mixture_heldout"] = evaluate_model(
         mixed, MusicDataset(root / "combined.jsonl", config, "test"), config
     )

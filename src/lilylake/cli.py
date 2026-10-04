@@ -79,7 +79,7 @@ def parser():
     e.add_argument("--output", required=True)
     a = sub.add_parser("transcribe", help="infer events from audio and engrave a score")
     a.add_argument("audio")
-    a.add_argument("--checkpoint", required=True)
+    a.add_argument("--checkpoint", help="defaults to the included development checkpoint")
     a.add_argument("-o", "--output", required=True)
     a.add_argument("--tempo", type=float, help="override heuristic tempo estimation")
     a.add_argument("--no-validate", action="store_true")

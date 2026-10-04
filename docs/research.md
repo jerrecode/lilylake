@@ -10,3 +10,5 @@ Primary sources consulted:
 Source separation may help but also introduces errors; the first baseline learns directly on mixtures. Bow direction/speed and physical key release under pedal cannot generally be uniquely recovered from a mixture: unknown fields are preferable to fabricated certainty. Staff assignment and meter are not unique; keep performance truth separate from notation assumptions.
 
 - Ellis (2007) and librosa documentation: https://librosa.org/doc/main/api/generated/librosa.beat.beat_track.html . Onset autocorrelation motivates the conservative tempo hypothesis module; LilyLake does not implement or claim the full Ellis dynamic-programming tracker.
+
+Compiler debugging verified that pedal commands are post-events, attached after a timed skip at their event position. See [LilyPond piano notation](https://lilypond.org/doc/v2.24/Documentation/notation/piano). Actual compiler regressions cover late sustain releases instead of relying only on textual output.

@@ -52,3 +52,45 @@ def test_maestro_local_adapter_records_license_and_safe_paths(tmp_path):
     (root / "maestro.json").write_text(json.dumps(metadata))
     with pytest.raises(ValueError, match="outside"):
         import_maestro(root, root / "maestro.json", tmp_path / "bad")
+
+
+def test_merge_rejects_generator_seed_variants_across_splits(tmp_path):
+    files = []
+    for i, split in enumerate(["train", "test"]):
+        path = tmp_path / f"{i}.jsonl"
+        row = {
+            "id": str(i),
+            "composition_id": f"level-variant-{i}",
+            "seed": 42,
+            "generator_version": 1,
+            "level": 5 + i,
+            "split": split,
+            "audio": "audio.wav",
+            "events": "events.json",
+        }
+        path.write_text(json.dumps(row))
+        files.append(path)
+    with pytest.raises(ValueError, match="leakage"):
+        merge_manifests(files, tmp_path / "bad.jsonl")
+
+
+@pytest.mark.parametrize("other_split", ["validation", "test"])
+def test_direct_manifest_load_rejects_seed_family_leakage(tmp_path, other_split):
+    from lilylake.config import Config
+    from lilylake.training import MusicDataset
+
+    rows = [
+        {
+            "composition_id": str(i),
+            "generator_version": 1,
+            "seed": 42,
+            "split": split,
+            "audio": "a.wav",
+            "events": "e.json",
+        }
+        for i, split in enumerate(["train", other_split])
+    ]
+    manifest = tmp_path / "direct.jsonl"
+    manifest.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    with pytest.raises(ValueError, match="leakage"):
+        MusicDataset(manifest, Config())

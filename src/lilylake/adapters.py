@@ -4,12 +4,14 @@ import hashlib
 import json
 from pathlib import Path
 
+from .data import composition_family
 from .music.midi import read_midi
 
 
 def merge_manifests(manifests, output):
     rows = []
     splits = {}
+    family_splits = {}
     seen = set()
     for manifest in manifests:
         manifest = Path(manifest)
@@ -22,6 +24,10 @@ def merge_manifests(manifests, output):
             if pid in splits and splits[pid] != split:
                 raise ValueError(f"Composition leakage: {pid} appears in {splits[pid]} and {split}")
             splits[pid] = split
+            family = composition_family(row)
+            if family in family_splits and family_splits[family] != split:
+                raise ValueError(f"Composition-family leakage: {family} has different splits")
+            family_splits[family] = split
             for key in ["audio", "events"]:
                 row[key] = str((manifest.parent / row[key]).resolve())
             identity = hashlib.sha256((row["audio"] + row["events"]).encode()).hexdigest()[:20]

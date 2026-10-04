@@ -1,9 +1,50 @@
 {
   "verified_on": "2026-10-04",
   "datasets": [
-    {"id":"lilylake-procedural","license":"original-generated","source":"src/lilylake/data.py","bundled_external_material":false,"downloaded":false},
-    {"id":"maestro-v3","license":"CC-BY-NC-SA-4.0","source":"https://magenta.withgoogle.com/datasets/maestro","commercial_use":false,"downloaded":false,"notes":"Use official composition splits; comply with attribution/noncommercial/share-alike terms."},
-    {"id":"slakh2100","license":"CC-BY-4.0","source":"https://www.slakh.com/","downloaded":false,"notes":"Provider-stated license. Inspect underlying MIDI provenance and retain attribution before incorporation."}
+    {
+      "id": "lilylake-procedural",
+      "license": "original-generated",
+      "source": "src/lilylake/data.py",
+      "bundled_external_material": false,
+      "downloaded": false
+    },
+    {
+      "id": "maestro-v3",
+      "license": "CC-BY-NC-SA-4.0",
+      "source": "https://magenta.withgoogle.com/datasets/maestro",
+      "commercial_use": false,
+      "downloaded": false,
+      "notes": "Use official composition splits; comply with attribution/noncommercial/share-alike terms."
+    },
+    {
+      "id": "slakh2100",
+      "license": "CC-BY-4.0",
+      "source": "https://www.slakh.com/",
+      "downloaded": false,
+      "notes": "Provider-stated license. Inspect underlying MIDI provenance and retain attribution before incorporation."
+    }
   ],
-  "soundfonts": [{"id":"FluidR3_GM","source":"Ubuntu fluid-soundfont-gm 3.1-5.3","license":"MIT (distribution copyright file)","bundled":false,"notes":"Local development installation; font SHA recorded per render. Verify the license of each additional user-supplied font."}]
+  "soundfonts": [
+    {
+      "id": "FluidR3_GM",
+      "source": "Ubuntu fluid-soundfont-gm 3.1-5.3",
+      "license": "MIT (distribution copyright file)",
+      "bundled": false,
+      "notes": "Local development installation; font SHA recorded per render. Verify the license of each additional user-supplied font.",
+      "sha256": "74594e8f4250680adf590507a306655a299935343583256f3b722c48a1bc1cb0",
+      "copyright": "2000-2002, 2008 Frank Wen; 2008 Toby Smithe",
+      "usage": "training and evaluation"
+    },
+    {
+      "id": "TimGM6mb",
+      "source": "Ubuntu timgm6mb-soundfont 1.3-5; distribution copyright file",
+      "upstream": "https://github.com/musescore/musescore-old/commit/90c33ef9d87b3f5ff92efd3b07d89eb455fb1fef",
+      "license": "GPL-2.0-only",
+      "copyright": "2004 Tim Brechbill; 2010 David Bolton",
+      "sha256": "c5378b62028c920cb11e4803327983fee2f2cdff5dc89c708e39da417e51c854",
+      "bundled": false,
+      "usage": "evaluation only; excluded from all training",
+      "notes": "SoundFont and rendered evaluation audio are not redistributed. Provider statement includes own/public-domain/GPL samples; no independent audit of individual samples."
+    }
+  ]
 }

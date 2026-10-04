@@ -139,3 +139,89 @@ def test_chunked_inference_matches_whole_clip_with_global_normalization():
     chunked = predict_audio(model, audio, c)
     for key in whole:
         np.testing.assert_allclose(chunked[key], whole[key], atol=2e-5, rtol=2e-5)
+
+
+def test_resume_rejects_modified_data_and_validation_policy(tmp_path):
+    manifest = make_dataset(tmp_path)
+    c = Config(
+        sample_rate=8000,
+        n_fft=512,
+        hop=80,
+        harmonics=2,
+        width=8,
+        depth=1,
+        epochs=1,
+        batch_size=2,
+        threads=1,
+    )
+    train(manifest, tmp_path / "run", c, sanity_overfit=True)
+    checkpoint = tmp_path / "run/last.pt"
+    changed = Config(**{**c.to_dict(), "scheduler_gamma": 0.5, "epochs": 2})
+    with pytest.raises(ValueError, match="configuration"):
+        train(manifest, tmp_path / "run", changed, sanity_overfit=True, resume=checkpoint)
+    data = Piece.load(tmp_path / "0/events.json")
+    data.parts[0].notes[0].velocity = 50
+    data.save(tmp_path / "0/events.json")
+    with pytest.raises(ValueError, match="dataset|data"):
+        train(manifest, tmp_path / "run", c, sanity_overfit=True, resume=checkpoint)
+
+
+@pytest.mark.parametrize("change", ["validation_id", "validation_content", "online_policy"])
+def test_resume_rejects_changed_validation_cohort_or_online_mode(tmp_path, change):
+    manifest = make_dataset(tmp_path)
+    rows = [json.loads(line) for line in manifest.read_text().splitlines()]
+    rows[1]["split"] = "validation"
+    manifest.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    c = Config(
+        sample_rate=8000,
+        n_fft=512,
+        hop=80,
+        harmonics=2,
+        width=8,
+        depth=1,
+        epochs=1,
+        batch_size=2,
+        threads=1,
+    )
+    train(manifest, tmp_path / "run", c)
+    checkpoint = tmp_path / "run/last.pt"
+    if change == "validation_id":
+        rows[1]["composition_id"] = "different-piece"
+        manifest.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    elif change == "validation_content":
+        data = Piece.load(tmp_path / "1/events.json")
+        data.parts[0].notes[0].velocity = 51
+        data.save(tmp_path / "1/events.json")
+    with pytest.raises(ValueError, match="dataset|data|policy"):
+        train(
+            manifest,
+            tmp_path / "run",
+            c,
+            resume=checkpoint,
+            online_count=2 if change == "online_policy" else 0,
+        )
+
+
+def test_online_signature_tracks_count_and_curriculum_policy():
+    from lilylake.training import OnlineDataset, _experiment_signature
+
+    c = Config()
+    training = OnlineDataset(2, c, "train")
+    validation = OnlineDataset(2, c, "validation")
+    signatures = {
+        _experiment_signature(training, validation, count, curriculum, False)
+        for count, curriculum in [(2, False), (3, False), (2, True)]
+    }
+    assert len(signatures) == 3
+
+
+def test_online_curriculum_seed_families_do_not_cross_splits():
+    from lilylake.training import OnlineDataset
+
+    c = Config()
+    train_seeds = set()
+    validation_seeds = set()
+    for level in range(1, 11):
+        train_seeds.update(r["seed"] for r in OnlineDataset(16, c, "train", level).rows)
+        validation_seeds.update(r["seed"] for r in OnlineDataset(8, c, "validation", level).rows)
+    assert not train_seeds & validation_seeds

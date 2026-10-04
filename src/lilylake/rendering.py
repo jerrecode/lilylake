@@ -114,16 +114,24 @@ def synthesize(piece: Piece, sample_rate=16000, seed=0, tuning_cents=0.0, tail=0
 
 
 def render_midi(
-    midi, audio, engine="procedural", sample_rate=16000, soundfont=None, seed=0, tuning_cents=0.0
+    midi,
+    audio,
+    engine="procedural",
+    sample_rate=16000,
+    soundfont=None,
+    seed=0,
+    tuning_cents=0.0,
+    instrument_map=None,
 ):
     audio = Path(audio)
     audio.parent.mkdir(parents=True, exist_ok=True)
-    truth = read_midi(midi)
+    truth = read_midi(midi, instrument_map)
     metadata = {
         "engine": engine,
         "sample_rate": sample_rate,
         "seed": seed,
         "tuning_cents": tuning_cents,
+        "instrument_map": instrument_map or {},
     }
     if engine == "procedural":
         sf.write(
@@ -172,13 +180,31 @@ def render_midi(
 
 
 def render_piece(piece, directory, engine="procedural", sample_rate=16000, soundfont=None, seed=0):
+    instrument_map = {}
+    for part in piece.parts:
+        instrument = INSTRUMENTS[part.instrument]
+        if instrument.percussion:
+            continue
+        previous = instrument_map.get(instrument.program)
+        if previous is not None and previous != part.instrument:
+            raise ValueError(
+                f"Ambiguous GM program {instrument.program}: {previous} and {part.instrument} "
+                "share a rendering timbre; use one taxonomy name per program"
+            )
+        instrument_map[instrument.program] = part.instrument
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     piece.save(directory / "composition.json")
     (directory / "score.ly").write_text(serialize(piece))
     result = compile_score(directory / "score.ly", directory / "score")
     truth, meta = render_midi(
-        result["midi"], directory / "audio.wav", engine, sample_rate, soundfont, seed
+        result["midi"],
+        directory / "audio.wav",
+        engine,
+        sample_rate,
+        soundfont,
+        seed,
+        instrument_map=instrument_map,
     )
     truth.metadata.update({"label_source": "LilyPond compiled MIDI", "renderer": meta})
     truth.save(directory / "events.json")

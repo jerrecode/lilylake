@@ -13,3 +13,5 @@ checkpoints/
 *.midi
 *.pt
 !examples/development.pt
+!examples/mixture-development.pt
+!examples/piano-development.pt

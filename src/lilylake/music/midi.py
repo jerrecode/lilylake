@@ -82,7 +82,7 @@ def _append(track, events):
     track.append(mido.MetaMessage("end_of_track", time=0))
 
 
-def read_midi(path):
+def read_midi(path, instrument_map=None):
     mid = mido.MidiFile(path)
     clock = 0.0
     tempo = 500000
@@ -94,7 +94,11 @@ def read_midi(path):
 
     def part(channel):
         instrument = (
-            "drum_kit" if channel == 9 else PROGRAM_NAMES.get(programs[channel], "grand_piano")
+            "drum_kit"
+            if channel == 9
+            else (instrument_map or {}).get(
+                programs[channel], PROGRAM_NAMES.get(programs[channel], "unknown")
+            )
         )
         key = (channel, instrument)
         if key not in parts:
@@ -120,17 +124,27 @@ def read_midi(path):
             programs[msg.channel] = msg.program
         elif msg.type == "note_on" and msg.velocity > 0:
             p = part(msg.channel)
-            active[(msg.channel, msg.note)].append((clock, msg.velocity, p))
+            active[(msg.channel, msg.note)].append((clock, msg.velocity, p, programs[msg.channel]))
         elif msg.type == "note_off" or (msg.type == "note_on" and msg.velocity == 0):
             q = active[(msg.channel, msg.note)]
             if q:
-                on, vel, p = q.popleft()
+                on, vel, p, program = q.popleft()
                 if clock > on:
-                    p.notes.append(Note(msg.note, on, clock, vel))
+                    p.notes.append(
+                        Note(
+                            msg.note,
+                            on,
+                            clock,
+                            vel,
+                            expression={"source_midi_program": program}
+                            if p.instrument == "unknown"
+                            else {},
+                        )
+                    )
         elif msg.type == "control_change" and msg.control in [64, 66, 67]:
             part(msg.channel).pedals.append(Pedal(clock, msg.value / 127, msg.control))
     for (channel, pitch), q in active.items():
-        for on, vel, p in q:
+        for on, vel, p, program in q:
             if clock > on:
                 p.notes.append(
                     Note(pitch, on, clock, vel, expression={"unterminated_midi_note": True})

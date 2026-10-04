@@ -1,5 +1,6 @@
 """Bounded data caches, safe atomic checkpoints, and resumable CPU/GPU training."""
 
+import hashlib
 import importlib.metadata
 import json
 import os
@@ -19,7 +20,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from .audio import features, load_audio
 from .config import Config
-from .data import compose, split_for
+from .data import compose, composition_family, split_for, validate_manifest_splits
 from .evaluation import _metrics, evaluate_notes, frame_metrics
 from .inference import decode, select_device
 from .models import EventModel, event_loss, targets
@@ -43,6 +44,42 @@ def load_checkpoint(path):
     return torch.load(path, map_location="cpu", weights_only=True)
 
 
+def _file_digest(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as file:
+        for block in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _experiment_signature(training, validation, online_count, curriculum, sanity_overfit):
+    definition = {
+        "online_count": online_count,
+        "curriculum": curriculum,
+        "sanity_overfit": sanity_overfit,
+    }
+    if online_count:
+        definition.update(
+            {
+                "seed": training.config.seed,
+                "instruments": training.config.instruments,
+                "generator": _file_digest(Path(__file__).with_name("data.py")),
+                "split_policy": "seed-family-v1",
+            }
+        )
+    else:
+        for name, dataset in [("train", training), ("validation", validation)]:
+            definition[name] = [
+                {
+                    "composition_id": row["composition_id"],
+                    "audio": _file_digest(dataset.root / row["audio"]),
+                    "events": _file_digest(dataset.root / row["events"]),
+                }
+                for row in dataset.rows
+            ]
+    return hashlib.sha256(json.dumps(definition, sort_keys=True).encode()).hexdigest()
+
+
 class MusicDataset(Dataset):
     def __init__(self, manifest, config, split="train", all_rows=False):
         self.root = Path(manifest).parent
@@ -50,6 +87,7 @@ class MusicDataset(Dataset):
         self.rows = [
             json.loads(line) for line in Path(manifest).read_text().splitlines() if line.strip()
         ]
+        validate_manifest_splits(self.rows)
         self.rows = [r for r in self.rows if all_rows or r["split"] == split]
         if not self.rows:
             raise ValueError(
@@ -130,7 +168,7 @@ class OnlineDataset(MusicDataset):
         while len(self.rows) < self.count:
             piece = compose(seed, self.level, self.config.instruments)
             pid = piece.metadata["composition_id"]
-            if split_for(pid) == self.split:
+            if split_for(f"procedural-seed-v1:{seed}") == self.split:
                 self.rows.append({"seed": seed, "composition_id": pid, "level": self.level})
             seed += 1
 
@@ -257,6 +295,17 @@ def provenance(config):
         ).strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         revision = None
+    source_hash = hashlib.sha256(
+        b"".join(p.read_bytes() for p in sorted(Path(__file__).parent.rglob("*.py")))
+    ).hexdigest()
+    try:
+        dirty = bool(
+            subprocess.check_output(
+                ["git", "status", "--porcelain"], text=True, stderr=subprocess.DEVNULL
+            ).strip()
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        dirty = None
     versions = {
         name: importlib.metadata.version(name)
         for name in ["torch", "numpy", "scipy", "soundfile", "mido"]
@@ -264,6 +313,8 @@ def provenance(config):
     return {
         "config": config.to_dict(),
         "git_revision": revision,
+        "working_tree_dirty": dirty,
+        "source_sha256": source_hash,
         "dependencies": versions,
         "python": platform.python_version(),
         "platform": platform.platform(),
@@ -320,20 +371,10 @@ def _train(
     state = load_checkpoint(resume) if resume else None
     config = config or (Config(**state["config"]) if state else Config())
     if state:
-        immutable = [
-            "sample_rate",
-            "n_fft",
-            "hop",
-            "harmonics",
-            "width",
-            "depth",
-            "instruments",
-            "batch_size",
-            "learning_rate",
-            "seed",
-            "accumulation",
-        ]
-        if any(state["config"][k] != config.to_dict()[k] for k in immutable):
+        previous_config = Config(**state["config"]).to_dict()
+        resource_settings = {"epochs", "threads", "workers", "device", "cache_mb"}
+        immutable = set(previous_config) - resource_settings
+        if any(previous_config[k] != config.to_dict()[k] for k in immutable):
             raise ValueError("Resume configuration differs from checkpoint training/model settings")
     torch.set_num_threads(config.threads)
     random.seed(config.seed)
@@ -349,6 +390,32 @@ def _train(
         validation = MusicDataset(manifest, config, "validation", all_rows=sanity_overfit)
     if not sanity_overfit and set(training.identities) & set(validation.identities):
         raise ValueError("Composition leakage between train and validation")
+    if not sanity_overfit and not online_count:
+        families = {composition_family(row) for row in training.rows}
+        if families & {composition_family(row) for row in validation.rows}:
+            raise ValueError("Composition-family leakage between train and validation")
+    experiment_signature = _experiment_signature(
+        training, validation, online_count, curriculum, sanity_overfit
+    )
+    if state:
+        if state.get("experiment_signature") is not None:
+            if state["experiment_signature"] != experiment_signature:
+                raise ValueError(
+                    "Resume dataset contents, validation data, or online policy differ"
+                )
+        else:
+            # Legacy development checkpoints predate content fingerprints.
+            previous = state.get("provenance", {})
+            if online_count or previous.get("online_count", 0):
+                raise ValueError(
+                    "Legacy online checkpoint lacks policy fingerprint; use --initialize"
+                )
+            if (
+                state.get("dataset_ids") != training.identities
+                or previous.get("validation_ids") != validation.identities
+                or previous.get("sanity_overfit", False) != sanity_overfit
+            ):
+                raise ValueError("Resume dataset identities or validation data differ")
     model = EventModel(config).to(device)
     if initialize:
         if state:
@@ -398,6 +465,8 @@ def _train(
         {
             "sanity_overfit": sanity_overfit,
             "online_count": online_count,
+            "curriculum": curriculum,
+            "experiment_signature": experiment_signature,
             "train_ids": training.identities,
             "validation_ids": validation.identities,
             "resume_epoch": start_epoch,
@@ -496,6 +565,7 @@ def _train(
             "history": history,
             "validation": last_validation,
             "dataset_ids": training.identities,
+            "experiment_signature": experiment_signature,
             "curriculum_level": level,
             "provenance": run,
         }

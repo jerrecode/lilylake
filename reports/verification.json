@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-04",
+  "tests": {
+    "command": "python -m pytest -q (LilyPond and FluidSynth on PATH)",
+    "passed": 52,
+    "skipped": 0,
+    "seconds": 26.8
+  },
+  "lint": "ruff check src tests scripts: passed",
+  "dependencies": "pip check: no broken requirements",
+  "critical_cases_compiled_rendered": 24,
+  "independent_review": "approved after fixes; see docs/engineering-review.md",
+  "evaluation_reproduction": {
+    "heldout_note_f1": 0.4420485175202156,
+    "unseen_soundfont_note_f1": 0.36724565756823824,
+    "matches_published_counts_exactly": true
+  },
+  "real_recording_validation": false
+}

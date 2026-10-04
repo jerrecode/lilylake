@@ -1,0 +1,792 @@
+{
+  "parts": [
+    {
+      "id": "grand_piano",
+      "instrument": "grand_piano",
+      "notes": [
+        {
+          "pitch": 54,
+          "onset": 0.01,
+          "offset": 0.04,
+          "velocity": 94,
+          "confidence": {
+            "pitch": 0.9257984757423401,
+            "onset": 0.9978454113006592,
+            "offset": 0.33251047134399414,
+            "instrument": 0.9257984757423401,
+            "articulation": 0.0,
+            "source_assignment": 0.9257984757423401
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 54,
+          "onset": 0.04,
+          "offset": 0.22,
+          "velocity": 95,
+          "confidence": {
+            "pitch": 0.9483582973480225,
+            "onset": 0.541354775428772,
+            "offset": 0.42532384395599365,
+            "instrument": 0.9483582973480225,
+            "articulation": 0.0,
+            "source_assignment": 0.9483582973480225
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 56,
+          "onset": 0.2,
+          "offset": 0.36,
+          "velocity": 92,
+          "confidence": {
+            "pitch": 0.9025640487670898,
+            "onset": 0.9882723689079285,
+            "offset": 0.5153708457946777,
+            "instrument": 0.9025640487670898,
+            "articulation": 0.0,
+            "source_assignment": 0.9025640487670898
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 58,
+          "onset": 0.38,
+          "offset": 0.54,
+          "velocity": 79,
+          "confidence": {
+            "pitch": 0.6932200193405151,
+            "onset": 0.8287444710731506,
+            "offset": 0.7117177248001099,
+            "instrument": 0.6932200193405151,
+            "articulation": 0.0,
+            "source_assignment": 0.6932200193405151
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 59,
+          "onset": 0.59,
+          "offset": 0.76,
+          "velocity": 95,
+          "confidence": {
+            "pitch": 0.9426125884056091,
+            "onset": 0.9775201678276062,
+            "offset": 0.5532675385475159,
+            "instrument": 0.9426125884056091,
+            "articulation": 0.0,
+            "source_assignment": 0.9426125884056091
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 59,
+          "onset": 0.76,
+          "offset": 0.84,
+          "velocity": 92,
+          "confidence": {
+            "pitch": 0.9265440702438354,
+            "onset": 0.7740880250930786,
+            "offset": 0.6168648600578308,
+            "instrument": 0.9265440702438354,
+            "articulation": 0.0,
+            "source_assignment": 0.9265440702438354
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 61,
+          "onset": 0.79,
+          "offset": 1.02,
+          "velocity": 86,
+          "confidence": {
+            "pitch": 0.9253653883934021,
+            "onset": 0.936885416507721,
+            "offset": 0.320498526096344,
+            "instrument": 0.9253653883934021,
+            "articulation": 0.0,
+            "source_assignment": 0.9253653883934021
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 63,
+          "onset": 1.0,
+          "offset": 1.28,
+          "velocity": 92,
+          "confidence": {
+            "pitch": 0.9803951382637024,
+            "onset": 0.9918477535247803,
+            "offset": 0.24557895958423615,
+            "instrument": 0.9803951382637024,
+            "articulation": 0.0,
+            "source_assignment": 0.9803951382637024
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 77,
+          "onset": 1.11,
+          "offset": 1.24,
+          "velocity": 84,
+          "confidence": {
+            "pitch": 0.7003206610679626,
+            "onset": 0.7399091720581055,
+            "offset": 0.6759798526763916,
+            "instrument": 0.7003206610679626,
+            "articulation": 0.0,
+            "source_assignment": 0.7003206610679626
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 65,
+          "onset": 1.18,
+          "offset": 1.43,
+          "velocity": 81,
+          "confidence": {
+            "pitch": 0.8944370150566101,
+            "onset": 0.8487123847007751,
+            "offset": 0.5042450428009033,
+            "instrument": 0.8944370150566101,
+            "articulation": 0.0,
+            "source_assignment": 0.8944370150566101
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 66,
+          "onset": 1.3900000000000001,
+          "offset": 1.53,
+          "velocity": 95,
+          "confidence": {
+            "pitch": 0.8446367383003235,
+            "onset": 0.988651692867279,
+            "offset": 0.63730788230896,
+            "instrument": 0.8446367383003235,
+            "articulation": 0.0,
+            "source_assignment": 0.8446367383003235
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 54,
+          "onset": 1.58,
+          "offset": 1.8,
+          "velocity": 85,
+          "confidence": {
+            "pitch": 0.9081729650497437,
+            "onset": 0.9067444205284119,
+            "offset": 0.6470467448234558,
+            "instrument": 0.9081729650497437,
+            "articulation": 0.0,
+            "source_assignment": 0.9081729650497437
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 56,
+          "onset": 1.8,
+          "offset": 2.07,
+          "velocity": 91,
+          "confidence": {
+            "pitch": 0.9722976088523865,
+            "onset": 0.9764853715896606,
+            "offset": 0.38386520743370056,
+            "instrument": 0.9722976088523865,
+            "articulation": 0.0,
+            "source_assignment": 0.9722976088523865
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 70,
+          "onset": 1.9000000000000001,
+          "offset": 2.0300000000000002,
+          "velocity": 83,
+          "confidence": {
+            "pitch": 0.529619038105011,
+            "onset": 0.7784106731414795,
+            "offset": 0.24124087393283844,
+            "instrument": 0.529619038105011,
+            "articulation": 0.0,
+            "source_assignment": 0.529619038105011
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 82,
+          "onset": 1.92,
+          "offset": 1.95,
+          "velocity": 90,
+          "confidence": {
+            "pitch": 0.23658716678619385,
+            "onset": 0.7285284996032715,
+            "offset": 0.5161221027374268,
+            "instrument": 0.23658716678619385,
+            "articulation": 0.0,
+            "source_assignment": 0.23658716678619385
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 89,
+          "onset": 1.93,
+          "offset": 1.99,
+          "velocity": 89,
+          "confidence": {
+            "pitch": 0.4945104420185089,
+            "onset": 0.5214266180992126,
+            "offset": 0.45436036586761475,
+            "instrument": 0.4945104420185089,
+            "articulation": 0.0,
+            "source_assignment": 0.4945104420185089
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 58,
+          "onset": 1.98,
+          "offset": 2.21,
+          "velocity": 81,
+          "confidence": {
+            "pitch": 0.8773606419563293,
+            "onset": 0.9164354801177979,
+            "offset": 0.4746111035346985,
+            "instrument": 0.8773606419563293,
+            "articulation": 0.0,
+            "source_assignment": 0.8773606419563293
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 56,
+          "onset": 2.07,
+          "offset": 2.13,
+          "velocity": 84,
+          "confidence": {
+            "pitch": 0.6275092959403992,
+            "onset": 0.6489694118499756,
+            "offset": 0.421764075756073,
+            "instrument": 0.6275092959403992,
+            "articulation": 0.0,
+            "source_assignment": 0.6275092959403992
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 59,
+          "onset": 2.2,
+          "offset": 2.41,
+          "velocity": 96,
+          "confidence": {
+            "pitch": 0.9086859822273254,
+            "onset": 0.9740743041038513,
+            "offset": 0.43574124574661255,
+            "instrument": 0.9086859822273254,
+            "articulation": 0.0,
+            "source_assignment": 0.9086859822273254
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        }
+      ],
+      "pedals": []
+    },
+    {
+      "id": "violin",
+      "instrument": "violin",
+      "notes": [
+        {
+          "pitch": 71,
+          "onset": 0.1,
+          "offset": 0.25,
+          "velocity": 100,
+          "confidence": {
+            "pitch": 0.9508275985717773,
+            "onset": 0.8736327886581421,
+            "offset": 0.5056759715080261,
+            "instrument": 0.9508275985717773,
+            "articulation": 0.0,
+            "source_assignment": 0.9508275985717773
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 70,
+          "onset": 0.29,
+          "offset": 0.42,
+          "velocity": 90,
+          "confidence": {
+            "pitch": 0.9160075783729553,
+            "onset": 0.7806051969528198,
+            "offset": 0.5245469212532043,
+            "instrument": 0.9160075783729553,
+            "articulation": 0.0,
+            "source_assignment": 0.9160075783729553
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 58,
+          "onset": 0.38,
+          "offset": 0.5,
+          "velocity": 89,
+          "confidence": {
+            "pitch": 0.9455447793006897,
+            "onset": 0.8422874808311462,
+            "offset": 0.41509589552879333,
+            "instrument": 0.9455447793006897,
+            "articulation": 0.0,
+            "source_assignment": 0.9455447793006897
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 68,
+          "onset": 0.49,
+          "offset": 0.66,
+          "velocity": 102,
+          "confidence": {
+            "pitch": 0.9557928442955017,
+            "onset": 0.8776183724403381,
+            "offset": 0.5713731050491333,
+            "instrument": 0.9557928442955017,
+            "articulation": 0.0,
+            "source_assignment": 0.9557928442955017
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 61,
+          "onset": 0.78,
+          "offset": 0.85,
+          "velocity": 90,
+          "confidence": {
+            "pitch": 0.42667046189308167,
+            "onset": 0.6585029363632202,
+            "offset": 0.2547760605812073,
+            "instrument": 0.42667046189308167,
+            "articulation": 0.0,
+            "source_assignment": 0.42667046189308167
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 78,
+          "onset": 0.9,
+          "offset": 1.1500000000000001,
+          "velocity": 94,
+          "confidence": {
+            "pitch": 0.9653360247612,
+            "onset": 0.8197328448295593,
+            "offset": 0.3348413109779358,
+            "instrument": 0.9653360247612,
+            "articulation": 0.0,
+            "source_assignment": 0.9653360247612
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 66,
+          "onset": 0.93,
+          "offset": 1.1,
+          "velocity": 98,
+          "confidence": {
+            "pitch": 0.9072346091270447,
+            "onset": 0.8919786810874939,
+            "offset": 0.4683631956577301,
+            "instrument": 0.9072346091270447,
+            "articulation": 0.0,
+            "source_assignment": 0.9072346091270447
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 77,
+          "onset": 1.09,
+          "offset": 1.21,
+          "velocity": 88,
+          "confidence": {
+            "pitch": 0.9141976237297058,
+            "onset": 0.7985408902168274,
+            "offset": 0.49606266617774963,
+            "instrument": 0.9141976237297058,
+            "articulation": 0.0,
+            "source_assignment": 0.9141976237297058
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 65,
+          "onset": 1.17,
+          "offset": 1.31,
+          "velocity": 86,
+          "confidence": {
+            "pitch": 0.8028162121772766,
+            "onset": 0.7644314765930176,
+            "offset": 0.30786773562431335,
+            "instrument": 0.8028162121772766,
+            "articulation": 0.0,
+            "source_assignment": 0.8028162121772766
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 63,
+          "onset": 1.3,
+          "offset": 1.36,
+          "velocity": 89,
+          "confidence": {
+            "pitch": 0.8434825539588928,
+            "onset": 0.637358546257019,
+            "offset": 0.3870619833469391,
+            "instrument": 0.8434825539588928,
+            "articulation": 0.0,
+            "source_assignment": 0.8434825539588928
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 75,
+          "onset": 1.3,
+          "offset": 1.51,
+          "velocity": 98,
+          "confidence": {
+            "pitch": 0.9313102960586548,
+            "onset": 0.7993856072425842,
+            "offset": 0.45786452293395996,
+            "instrument": 0.9313102960586548,
+            "articulation": 0.0,
+            "source_assignment": 0.9313102960586548
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 73,
+          "onset": 1.49,
+          "offset": 1.72,
+          "velocity": 95,
+          "confidence": {
+            "pitch": 0.9417228102684021,
+            "onset": 0.8128370642662048,
+            "offset": 0.5292034149169922,
+            "instrument": 0.9417228102684021,
+            "articulation": 0.0,
+            "source_assignment": 0.9417228102684021
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 71,
+          "onset": 1.69,
+          "offset": 1.94,
+          "velocity": 102,
+          "confidence": {
+            "pitch": 0.9783501625061035,
+            "onset": 0.8781848549842834,
+            "offset": 0.41083547472953796,
+            "instrument": 0.9783501625061035,
+            "articulation": 0.0,
+            "source_assignment": 0.9783501625061035
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 70,
+          "onset": 1.8800000000000001,
+          "offset": 2.07,
+          "velocity": 90,
+          "confidence": {
+            "pitch": 0.9422007203102112,
+            "onset": 0.8290802240371704,
+            "offset": 0.5954369902610779,
+            "instrument": 0.9422007203102112,
+            "articulation": 0.0,
+            "source_assignment": 0.9422007203102112
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 58,
+          "onset": 1.97,
+          "offset": 2.12,
+          "velocity": 90,
+          "confidence": {
+            "pitch": 0.8630839586257935,
+            "onset": 0.8295190930366516,
+            "offset": 0.3317226767539978,
+            "instrument": 0.8630839586257935,
+            "articulation": 0.0,
+            "source_assignment": 0.8630839586257935
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 68,
+          "onset": 2.09,
+          "offset": 2.42,
+          "velocity": 102,
+          "confidence": {
+            "pitch": 0.9596189856529236,
+            "onset": 0.8814983367919922,
+            "offset": 0.4273117482662201,
+            "instrument": 0.9596189856529236,
+            "articulation": 0.0,
+            "source_assignment": 0.9596189856529236
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        },
+        {
+          "pitch": 66,
+          "onset": 2.3000000000000003,
+          "offset": 2.46,
+          "velocity": 92,
+          "confidence": {
+            "pitch": 0.8894027471542358,
+            "onset": 0.8344732522964478,
+            "offset": 0.4772730767726898,
+            "instrument": 0.8894027471542358,
+            "articulation": 0.0,
+            "source_assignment": 0.8894027471542358
+          },
+          "articulation": null,
+          "expression": {
+            "bow_direction": null,
+            "pedal_key_release_distinction": "unknown",
+            "confidence_calibrated": false
+          }
+        }
+      ],
+      "pedals": []
+    }
+  ],
+  "tempo_map": [
+    {
+      "time": 0,
+      "bpm": 120.0
+    }
+  ],
+  "meter_map": [
+    {
+      "time": 0,
+      "numerator": 4,
+      "denominator": 4
+    }
+  ],
+  "key_map": [
+    {
+      "time": 0,
+      "tonic": "fis",
+      "mode": "major"
+    }
+  ],
+  "title": "LilyLake transcription",
+  "metadata": {
+    "timing_resolution_sec": 0.01,
+    "expression_identifiability": "unknown unless supervised",
+    "confidence_calibrated": false,
+    "notation_hypotheses": {
+      "tempo": {
+        "bpm": 120.0,
+        "source": "user",
+        "confidence": 1.0,
+        "alternatives": []
+      },
+      "meter": {
+        "numerator": 4,
+        "denominator": 4,
+        "source": "fallback",
+        "confidence": 0.0
+      },
+      "key": {
+        "tonic": "fis",
+        "mode": "major",
+        "confidence": 0.2261662613309745,
+        "source": "duration_weighted_diatonic_fit",
+        "ambiguity": "relative modes, modulation and enharmonic spelling"
+      },
+      "confidence_calibrated": false
+    },
+    "source_audio": "audio.wav",
+    "checkpoint": "best.pt",
+    "tempo_source": "user",
+    "meter_source": "fallback",
+    "key_source": "duration_weighted_diatonic_fit"
+  },
+  "schema_version": 1
+}

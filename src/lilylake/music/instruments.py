@@ -15,6 +15,7 @@ class Instrument:
 
 
 INSTRUMENTS = {
+    "unknown": Instrument(0, "acoustic grand"),
     "grand_piano": Instrument(0, "acoustic grand", 21, 108, keyboard=True),
     "piano": Instrument(0, "acoustic grand", 21, 108, keyboard=True),
     "upright_piano": Instrument(1, "bright acoustic", 21, 108, keyboard=True),

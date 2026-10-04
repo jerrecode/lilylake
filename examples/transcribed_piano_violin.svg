@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="440" viewBox="0 0 1000 440">
+<rect width="100%" height="100%" fill="#111827"/>
+<text x="20" y="28" fill="white" font-family="sans-serif" font-size="20">LilyLake transcription</text>
+<text x="15" y="65" fill="#3c83f6" font-family="sans-serif">grand_piano</text>
+<line x1="75" y1="215.0" x2="980" y2="215.0" stroke="#374151"/><text x="20" y="219.0" fill="#9ca3af" font-size="10">MIDI 21</text>
+<line x1="75" y1="197.0" x2="980" y2="197.0" stroke="#374151"/><text x="20" y="201.0" fill="#9ca3af" font-size="10">MIDI 33</text>
+<line x1="75" y1="179.0" x2="980" y2="179.0" stroke="#374151"/><text x="20" y="183.0" fill="#9ca3af" font-size="10">MIDI 45</text>
+<line x1="75" y1="161.0" x2="980" y2="161.0" stroke="#374151"/><text x="20" y="165.0" fill="#9ca3af" font-size="10">MIDI 57</text>
+<line x1="75" y1="143.0" x2="980" y2="143.0" stroke="#374151"/><text x="20" y="147.0" fill="#9ca3af" font-size="10">MIDI 69</text>
+<line x1="75" y1="125.0" x2="980" y2="125.0" stroke="#374151"/><text x="20" y="129.0" fill="#9ca3af" font-size="10">MIDI 81</text>
+<line x1="75" y1="107.0" x2="980" y2="107.0" stroke="#374151"/><text x="20" y="111.0" fill="#9ca3af" font-size="10">MIDI 93</text>
+<line x1="75" y1="89.0" x2="980" y2="89.0" stroke="#374151"/><text x="20" y="93.0" fill="#9ca3af" font-size="10">MIDI 105</text>
+<rect x="78.68" y="165.50" width="11.04" height="2" fill="#3c83f6"><title>grand_piano pitch 54, 0.010 to 0.040 seconds, velocity 94</title></rect>
+<rect x="89.72" y="165.50" width="66.22" height="2" fill="#3c83f6"><title>grand_piano pitch 54, 0.040 to 0.220 seconds, velocity 95</title></rect>
+<rect x="148.58" y="162.50" width="58.86" height="2" fill="#3c83f6"><title>grand_piano pitch 56, 0.200 to 0.360 seconds, velocity 92</title></rect>
+<rect x="214.80" y="159.50" width="58.86" height="2" fill="#3c83f6"><title>grand_piano pitch 58, 0.380 to 0.540 seconds, velocity 79</title></rect>
+<rect x="292.05" y="158.00" width="62.54" height="2" fill="#3c83f6"><title>grand_piano pitch 59, 0.590 to 0.760 seconds, velocity 95</title></rect>
+<rect x="354.59" y="158.00" width="29.43" height="2" fill="#3c83f6"><title>grand_piano pitch 59, 0.760 to 0.840 seconds, velocity 92</title></rect>
+<rect x="365.63" y="155.00" width="84.61" height="2" fill="#3c83f6"><title>grand_piano pitch 61, 0.790 to 1.020 seconds, velocity 86</title></rect>
+<rect x="442.89" y="152.00" width="103.01" height="2" fill="#3c83f6"><title>grand_piano pitch 63, 1.000 to 1.280 seconds, velocity 92</title></rect>
+<rect x="483.35" y="131.00" width="47.83" height="2" fill="#3c83f6"><title>grand_piano pitch 77, 1.110 to 1.240 seconds, velocity 84</title></rect>
+<rect x="509.11" y="149.00" width="91.97" height="2" fill="#3c83f6"><title>grand_piano pitch 65, 1.180 to 1.430 seconds, velocity 81</title></rect>
+<rect x="586.36" y="147.50" width="51.50" height="2" fill="#3c83f6"><title>grand_piano pitch 66, 1.390 to 1.530 seconds, velocity 95</title></rect>
+<rect x="656.26" y="165.50" width="80.93" height="2" fill="#3c83f6"><title>grand_piano pitch 54, 1.580 to 1.800 seconds, velocity 85</title></rect>
+<rect x="737.20" y="162.50" width="99.33" height="2" fill="#3c83f6"><title>grand_piano pitch 56, 1.800 to 2.070 seconds, velocity 91</title></rect>
+<rect x="773.98" y="141.50" width="47.83" height="2" fill="#3c83f6"><title>grand_piano pitch 70, 1.900 to 2.030 seconds, velocity 83</title></rect>
+<rect x="781.34" y="123.50" width="11.04" height="2" fill="#3c83f6"><title>grand_piano pitch 82, 1.920 to 1.950 seconds, velocity 90</title></rect>
+<rect x="785.02" y="113.00" width="22.07" height="2" fill="#3c83f6"><title>grand_piano pitch 89, 1.930 to 1.990 seconds, velocity 89</title></rect>
+<rect x="803.41" y="159.50" width="84.61" height="2" fill="#3c83f6"><title>grand_piano pitch 58, 1.980 to 2.210 seconds, velocity 81</title></rect>
+<rect x="836.52" y="162.50" width="22.07" height="2" fill="#3c83f6"><title>grand_piano pitch 56, 2.070 to 2.130 seconds, velocity 84</title></rect>
+<rect x="884.35" y="158.00" width="77.26" height="2" fill="#3c83f6"><title>grand_piano pitch 59, 2.200 to 2.410 seconds, velocity 96</title></rect>
+<text x="15" y="245" fill="#ed9241" font-family="sans-serif">violin</text>
+<line x1="75" y1="395.0" x2="980" y2="395.0" stroke="#374151"/><text x="20" y="399.0" fill="#9ca3af" font-size="10">MIDI 21</text>
+<line x1="75" y1="377.0" x2="980" y2="377.0" stroke="#374151"/><text x="20" y="381.0" fill="#9ca3af" font-size="10">MIDI 33</text>
+<line x1="75" y1="359.0" x2="980" y2="359.0" stroke="#374151"/><text x="20" y="363.0" fill="#9ca3af" font-size="10">MIDI 45</text>
+<line x1="75" y1="341.0" x2="980" y2="341.0" stroke="#374151"/><text x="20" y="345.0" fill="#9ca3af" font-size="10">MIDI 57</text>
+<line x1="75" y1="323.0" x2="980" y2="323.0" stroke="#374151"/><text x="20" y="327.0" fill="#9ca3af" font-size="10">MIDI 69</text>
+<line x1="75" y1="305.0" x2="980" y2="305.0" stroke="#374151"/><text x="20" y="309.0" fill="#9ca3af" font-size="10">MIDI 81</text>
+<line x1="75" y1="287.0" x2="980" y2="287.0" stroke="#374151"/><text x="20" y="291.0" fill="#9ca3af" font-size="10">MIDI 93</text>
+<line x1="75" y1="269.0" x2="980" y2="269.0" stroke="#374151"/><text x="20" y="273.0" fill="#9ca3af" font-size="10">MIDI 105</text>
+<rect x="111.79" y="320.00" width="55.18" height="2" fill="#ed9241"><title>violin pitch 71, 0.100 to 0.250 seconds, velocity 100</title></rect>
+<rect x="181.69" y="321.50" width="47.83" height="2" fill="#ed9241"><title>violin pitch 70, 0.290 to 0.420 seconds, velocity 90</title></rect>
+<rect x="214.80" y="339.50" width="44.15" height="2" fill="#ed9241"><title>violin pitch 58, 0.380 to 0.500 seconds, velocity 89</title></rect>
+<rect x="255.26" y="324.50" width="62.54" height="2" fill="#ed9241"><title>violin pitch 68, 0.490 to 0.660 seconds, velocity 102</title></rect>
+<rect x="361.95" y="335.00" width="25.75" height="2" fill="#ed9241"><title>violin pitch 61, 0.780 to 0.850 seconds, velocity 90</title></rect>
+<rect x="406.10" y="309.50" width="91.97" height="2" fill="#ed9241"><title>violin pitch 78, 0.900 to 1.150 seconds, velocity 94</title></rect>
+<rect x="417.13" y="327.50" width="62.54" height="2" fill="#ed9241"><title>violin pitch 66, 0.930 to 1.100 seconds, velocity 98</title></rect>
+<rect x="476.00" y="311.00" width="44.15" height="2" fill="#ed9241"><title>violin pitch 77, 1.090 to 1.210 seconds, velocity 88</title></rect>
+<rect x="505.43" y="329.00" width="51.50" height="2" fill="#ed9241"><title>violin pitch 65, 1.170 to 1.310 seconds, velocity 86</title></rect>
+<rect x="553.25" y="332.00" width="22.07" height="2" fill="#ed9241"><title>violin pitch 63, 1.300 to 1.360 seconds, velocity 89</title></rect>
+<rect x="553.25" y="314.00" width="77.26" height="2" fill="#ed9241"><title>violin pitch 75, 1.300 to 1.510 seconds, velocity 98</title></rect>
+<rect x="623.15" y="317.00" width="84.61" height="2" fill="#ed9241"><title>violin pitch 73, 1.490 to 1.720 seconds, velocity 95</title></rect>
+<rect x="696.73" y="320.00" width="91.97" height="2" fill="#ed9241"><title>violin pitch 71, 1.690 to 1.940 seconds, velocity 102</title></rect>
+<rect x="766.63" y="321.50" width="69.90" height="2" fill="#ed9241"><title>violin pitch 70, 1.880 to 2.070 seconds, velocity 90</title></rect>
+<rect x="799.74" y="339.50" width="55.18" height="2" fill="#ed9241"><title>violin pitch 58, 1.970 to 2.120 seconds, velocity 90</title></rect>
+<rect x="843.88" y="324.50" width="121.40" height="2" fill="#ed9241"><title>violin pitch 68, 2.090 to 2.420 seconds, velocity 102</title></rect>
+<rect x="921.14" y="327.50" width="58.86" height="2" fill="#ed9241"><title>violin pitch 66, 2.300 to 2.460 seconds, velocity 92</title></rect>
+</svg>

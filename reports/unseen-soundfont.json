@@ -1,0 +1,106 @@
+{
+  "loss": 0.34134462056681514,
+  "frame": {
+    "tp": 3494,
+    "fp": 3339,
+    "fn": 1218,
+    "precision": 0.5113420166837407,
+    "recall": 0.7415110356536503,
+    "f1": 0.605283672585535,
+    "support": 4712
+  },
+  "onset": {
+    "tp": 112,
+    "fp": 152,
+    "fn": 27,
+    "precision": 0.42424242424242425,
+    "recall": 0.8057553956834532,
+    "f1": 0.5558312655086849,
+    "support": 139
+  },
+  "note_with_offset": {
+    "tp": 74,
+    "fp": 190,
+    "fn": 65,
+    "precision": 0.2803030303030303,
+    "recall": 0.5323741007194245,
+    "f1": 0.36724565756823824,
+    "support": 139
+  },
+  "per_instrument": {
+    "grand_piano": {
+      "onset": {
+        "tp": 65,
+        "fp": 106,
+        "fn": 22,
+        "precision": 0.38011695906432746,
+        "recall": 0.7471264367816092,
+        "f1": 0.5038759689922481,
+        "support": 87
+      },
+      "note_with_offset": {
+        "tp": 35,
+        "fp": 136,
+        "fn": 52,
+        "precision": 0.2046783625730994,
+        "recall": 0.40229885057471265,
+        "f1": 0.2713178294573644,
+        "support": 87
+      }
+    },
+    "violin": {
+      "onset": {
+        "tp": 47,
+        "fp": 46,
+        "fn": 5,
+        "precision": 0.5053763440860215,
+        "recall": 0.9038461538461539,
+        "f1": 0.6482758620689656,
+        "support": 52
+      },
+      "note_with_offset": {
+        "tp": 39,
+        "fp": 54,
+        "fn": 13,
+        "precision": 0.41935483870967744,
+        "recall": 0.75,
+        "f1": 0.5379310344827586,
+        "support": 52
+      }
+    }
+  },
+  "onset_mae_ms": 19.236171130952336,
+  "offset_mae_ms": 99.71468749999998,
+  "velocity_mae": 8.026785714285714,
+  "velocity_rmse": 9.607939425287817,
+  "compositions": 16,
+  "composition_ids": [
+    "942d4a5a7f4e1b11a401",
+    "fea024b1e1b2c9292f2e",
+    "1ba43e729862d0c0fc66",
+    "ae52c99c11052a7b2c8d",
+    "0e1e6e0f9cc790201566",
+    "cb5585c166e718ef37f2",
+    "cf6f25a725a88363b654",
+    "c8a907204cdab2e2bdee",
+    "4d2d5674789a7d963c26",
+    "8f86a83b68ad667fe1b8",
+    "31a524becd6a526d37e2",
+    "6a722ee191a90afb6bfa",
+    "8e63ae657d9417d8fe2e",
+    "f1a15ec012a1d3087016",
+    "4788553ad799c5ca530d",
+    "f79640e20a2627dd2e92"
+  ],
+  "checkpoint": "examples/development.pt",
+  "split": "test",
+  "checkpoint_sha256": "826b511c9fd6c8fc3c6dab81f0e865906aad53079ede7458314c75d1f8e2a87e",
+  "domain": {
+    "engine": "fluidsynth",
+    "font": "TimGM6mb",
+    "font_sha256": "c5378b62028c920cb11e4803327983fee2f2cdff5dc89c708e39da417e51c854",
+    "license": "GPL-2.0-only",
+    "evaluation_only": true,
+    "seen_in_training": false
+  }
+}

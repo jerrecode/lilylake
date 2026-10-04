@@ -199,10 +199,19 @@ def predict_audio(model, audio, config, device="cpu"):
     return {key: np.concatenate(value, axis=0) for key, value in outputs.items()}
 
 
-def transcribe_audio(audio_file, checkpoint, output, tempo=None, validate=True):
+def transcribe_audio(
+    audio_file, checkpoint=None, output="outputs/transcription/score.ly", tempo=None, validate=True
+):
     from .rendering import compile_score
     from .training import load_checkpoint
 
+    checkpoint = (
+        Path(checkpoint)
+        if checkpoint
+        else Path(__file__).resolve().parents[2] / "examples" / "development.pt"
+    )
+    if not checkpoint.is_file():
+        raise ValueError("Checkpoint missing: use --checkpoint or train a model first")
     state = load_checkpoint(checkpoint)
     config = Config(**state["config"])
     torch.set_num_threads(config.threads)

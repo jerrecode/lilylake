@@ -31,6 +31,19 @@ def _quoted(text):
 
 def serialize(piece: Piece, subdivisions=(1, 2, 3, 4, 6, 8)):
     score = quantize(piece, subdivisions)
+    # Zero-duration streams produce no compiler MIDI. Keep a silent measure for empty output.
+    if score.end == 0:
+        meter = piece.meter_map[0]
+        score.end = Fraction(4 * meter.numerator, meter.denominator)
+    last_control = max(
+        [v.time for p in piece.parts for v in p.pedals]
+        + [v.time for values in [piece.tempo_map, piece.meter_map, piece.key_map] for v in values],
+        default=0.0,
+    )
+    last_beat = Fraction(seconds_to_beats(last_control, piece.tempo_map)).limit_denominator(96)
+    if last_beat >= score.end:
+        # LilyPond does not emit a controller at an otherwise zero-length final moment.
+        score.end = last_beat + Fraction(1, max(subdivisions))
     # Meter events reset bar alignment. Ties are split at every bar boundary.
     boundaries = set()
     for i, m in enumerate(piece.meter_map):
@@ -86,6 +99,19 @@ def serialize(piece: Piece, subdivisions=(1, 2, 3, 4, 6, 8)):
         return "{ " + " ".join(tokens) + " }"
 
     global_music = controls(globals)
+
+    def pedal_controls(events):
+        # Pedal commands are post-events: attach to a skip beginning at the event time.
+        # Placing them before a skip can attach release to the preceding skip instead.
+        grouped = {}
+        for beat, command in events:
+            grouped.setdefault(beat, []).append(command)
+        points = sorted(grouped)
+        tokens = ["s" + duration_token(points[0])] if points[0] > 0 else []
+        for index, beat in enumerate(points):
+            end = points[index + 1] if index + 1 < len(points) else score.end
+            tokens.append("s" + duration_token(end - beat) + "".join(grouped[beat]))
+        return "{ " + " ".join(tokens) + " }"
 
     def voice(notes, drums=False):
         tokens = []
@@ -162,7 +188,7 @@ def serialize(piece: Piece, subdivisions=(1, 2, 3, 4, 6, 8)):
                             "\\" + (on if ped.value >= 0.5 else off),
                         )
                     )
-                streams.append(controls(events))
+                streams.append(pedal_controls(events))
             clef_command = "" if inst.percussion else "\\clef " + _quoted(clef)
             return (
                 f"\\new {context} \\with {{ {settings} }} << {{ {clef_command} }} "

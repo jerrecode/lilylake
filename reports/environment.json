@@ -1,0 +1,18 @@
+{
+  "python": "3.12.14",
+  "torch": "2.14.1+cpu",
+  "cpu_count": 9,
+  "memory": {
+    "MemTotal": 10451464192,
+    "MemAvailable": 9169473536
+  },
+  "disk_free_bytes": 28715585536,
+  "cuda": false,
+  "mps": false,
+  "cuda_devices": [],
+  "tools": {
+    "lilypond": "/workspace/scratch/0ff48ba4773c/toolchain/bin/lilypond",
+    "fluidsynth": "/workspace/scratch/0ff48ba4773c/toolchain/bin/fluidsynth",
+    "ffmpeg": "/usr/bin/ffmpeg"
+  }
+}

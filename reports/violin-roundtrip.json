@@ -1,0 +1,76 @@
+{
+  "onset": {
+    "tp": 2,
+    "fp": 4,
+    "fn": 0,
+    "precision": 0.3333333333333333,
+    "recall": 1.0,
+    "f1": 0.5,
+    "support": 2
+  },
+  "note_with_offset": {
+    "tp": 2,
+    "fp": 4,
+    "fn": 0,
+    "precision": 0.3333333333333333,
+    "recall": 1.0,
+    "f1": 0.5,
+    "support": 2
+  },
+  "per_instrument": {
+    "grand_piano": {
+      "onset": {
+        "tp": 0,
+        "fp": 3,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 3,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      }
+    },
+    "violin": {
+      "onset": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "support": 2
+      },
+      "note_with_offset": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "support": 2
+      }
+    }
+  },
+  "onset_mae_ms": 5.0,
+  "offset_mae_ms": 35.00000000000003,
+  "velocity_mae": 1.5,
+  "velocity_rmse": 2.1213203435596424,
+  "matched_notes": 2,
+  "missing_notes": 0,
+  "spurious_notes": 4,
+  "tolerances": {
+    "onset_ms": 50.0,
+    "offset_ms_min": 50,
+    "offset_duration_fraction": 0.2
+  },
+  "compiled": true,
+  "rendered": true
+}

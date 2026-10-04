@@ -130,3 +130,51 @@ def test_hard_example_unisons_preserve_both_sources():
     assert all(n.pitch != 60 for part in p.parts for n in part.notes)
     assert {n.pitch for n in p.parts[0].notes} == {n.pitch for n in p.parts[1].notes}
     assert all(a.offset != b.offset for a, b in zip(p.parts[0].notes, p.parts[1].notes))
+
+
+@pytest.mark.parametrize("parts", [[], [Part("p", "grand_piano"), Part("v", "violin")]])
+def test_empty_predictions_compile_to_silent_midi(tmp_path, parts):
+    if not shutil.which("lilypond"):
+        pytest.skip("LilyPond not installed")
+    result = render_piece(Piece(parts), tmp_path)
+    assert result["midi"].exists()
+    assert not any(p.notes for p in Piece.load(result["events"]).parts)
+    audio, _ = sf.read(result["audio"])
+    assert audio.size and np.max(np.abs(audio)) == 0
+
+
+@pytest.mark.parametrize("instrument,pitch", [("piano", 60), ("bass_clarinet", 40)])
+def test_compiler_labels_preserve_supplied_instrument_taxonomy(tmp_path, instrument, pitch):
+    if not shutil.which("lilypond"):
+        pytest.skip("LilyPond not installed")
+    from lilylake.config import Config
+    from lilylake.models import targets
+
+    p = Piece([Part("source", instrument, [Note(pitch, 0, 0.5)])])
+    result = render_piece(p, tmp_path)
+    truth = Piece.load(result["events"])
+    assert [p.instrument for p in truth.parts] == [instrument]
+    y = targets(truth, 100, Config(instruments=[instrument]))
+    assert y["frame"][:, 0, pitch].sum() > 0
+
+
+def test_sustain_release_after_last_note_is_rendered(tmp_path):
+    if not shutil.which("lilypond"):
+        pytest.skip("LilyPond not installed")
+    p = Piece([Part("p", "grand_piano", [Note(60, 0, 0.25)], [Pedal(0, 1), Pedal(3, 0)])])
+    result = render_piece(p, tmp_path)
+    truth = Piece.load(result["events"])
+    assert any(
+        pedal.time >= 2.99 and pedal.value < 0.5 for part in truth.parts for pedal in part.pedals
+    )
+    audio, sr = sf.read(result["audio"])
+    assert len(audio) / sr >= 3.4
+    assert np.max(np.abs(audio[int(2 * sr) : int(2.2 * sr)])) > 0
+
+
+def test_render_rejects_ambiguous_same_program_taxonomy(tmp_path):
+    piece = Piece(
+        [Part("c", "clarinet", [Note(60, 0, 0.5)]), Part("b", "bass_clarinet", [Note(40, 0, 0.5)])]
+    )
+    with pytest.raises(ValueError, match="Ambiguous GM program"):
+        render_piece(piece, tmp_path)

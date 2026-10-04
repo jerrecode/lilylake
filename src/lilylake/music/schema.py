@@ -159,7 +159,12 @@ class Piece:
 
     @property
     def duration(self):
-        return max((n.offset for p in self.parts for n in p.notes), default=0.0)
+        return max(
+            [n.offset for p in self.parts for n in p.notes]
+            + [v.time for p in self.parts for v in p.pedals]
+            + [v.time for values in [self.tempo_map, self.meter_map, self.key_map] for v in values],
+            default=0.0,
+        )
 
     def to_dict(self):
         return asdict(self)

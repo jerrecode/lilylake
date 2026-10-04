@@ -88,3 +88,44 @@ def test_serializer_structures_and_escaped_title():
     ]:
         assert token in ly
     assert serialize(p) == ly
+
+
+def test_unknown_midi_program_is_unknown_instead_of_fabricated_piano(tmp_path):
+    import mido
+
+    mid = mido.MidiFile()
+    track = mido.MidiTrack()
+    mid.tracks.append(track)
+    track.extend(
+        [
+            mido.Message("program_change", program=99),
+            mido.Message("note_on", note=60, velocity=80),
+            mido.Message("note_off", note=60, velocity=0, time=480),
+        ]
+    )
+    mid.save(tmp_path / "unknown.mid")
+    piece = read_midi(tmp_path / "unknown.mid")
+    assert piece.parts[0].instrument == "unknown"
+    assert piece.parts[0].notes[0].expression["source_midi_program"] == 99
+
+
+def test_unknown_program_is_captured_at_note_on(tmp_path):
+    import mido
+
+    from lilylake.music.midi import read_midi
+
+    mid = mido.MidiFile()
+    mid.tracks.append(
+        mido.MidiTrack(
+            [
+                mido.Message("program_change", program=79),
+                mido.Message("note_on", note=60, velocity=80),
+                mido.Message("program_change", program=80, time=240),
+                mido.Message("note_off", note=60, time=240),
+            ]
+        )
+    )
+    mid.save(tmp_path / "programs.mid")
+    piece = read_midi(tmp_path / "programs.mid")
+    assert piece.parts[0].instrument == "unknown"
+    assert piece.parts[0].notes[0].expression["source_midi_program"] == 79

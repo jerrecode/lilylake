@@ -21,6 +21,14 @@ python -m pytest
 
 These commands install the compiler and synthesis tools, create an isolated Python environment, install CPU PyTorch and the project, then inspect dependencies and run tests. Tests requiring LilyPond skip if unavailable; CI installs it and runs them. Windows/macOS users should install LilyPond and FFmpeg separately and ensure their executables are on PATH.
 
+## Try the included trained checkpoint
+
+```bash
+python -m lilylake transcribe recording.wav --output score.ly
+```
+
+The repository includes three small, safely loadable development checkpoints. The short command selects `examples/development.pt` and writes LilyPond, event JSON and confidence JSON, then invokes LilyPond. It is trained for grand piano and violin; other instruments require additional training. These weights are a research baseline with substantial false positives and duration errors, not a production transcription model. See [experiment results and reproduction](docs/experiments.md) and [checkpoint hashes](examples/models.json).
+
 ## Generate, train, evaluate, transcribe
 
 ```bash
@@ -63,6 +71,6 @@ Arbitrary LilyPond can execute Scheme: compile only sources you trust or run ext
 
 `python -m lilylake merge-data outputs/data/manifest.jsonl outputs/maestro/manifest.jsonl --output outputs/combined.jsonl` merges compatible event datasets while rejecting composition leakage. `train --initialize previous/best.pt` starts a new optimizer from existing acoustic weights; `--resume` restores an interrupted run including optimizer/RNG state.
 
-`python scripts/experiments.py --soundfont /path/to/FluidR3_GM.sf2` reproduces the small CPU experiment families. Reports are measurements rather than forced accuracy gates. See `docs/status.md` for gaps against the original full research objective.
+`python scripts/experiments.py --soundfont /path/to/FluidR3_GM.sf2` runs the small CPU experiment families. `python scripts/evaluate_domains.py --manifest outputs/combined.jsonl --checkpoint examples/development.pt --unseen-soundfont /path/to/TimGM6mb.sf2` evaluates a composition split and optionally renders the same pieces with a held-out SoundFont. Reports are measurements rather than forced accuracy gates. See `docs/status.md` for gaps against the original full research objective.
 
 `python -m lilylake generate-hard-data --output outputs/hard --count 32 --seed 6000` creates independently seeded unison, violin-solo, dense-piano and crossing-voice examples. Named regression scores are not reused as training pieces. This is failure-driven data generation, not automated neural hard-example ranking.

@@ -32,6 +32,25 @@ def split_for(identity):
     return "train" if bucket < 80 else "validation" if bucket < 90 else "test"
 
 
+def composition_family(row):
+    """Group parameter variants of a generated seed before checking split leakage."""
+    if "seed" in row and row.get("generator_version") == 1:
+        return f"procedural-seed-v1:{row['seed']}"
+    if "seed" in row and row.get("generator") == "hard-v1":
+        return f"hard-seed-v1:{row['seed']}"
+    return row["composition_id"]
+
+
+def validate_manifest_splits(rows):
+    """Reject exact compositions and seeded variants crossing any dataset cohort."""
+    assignments = {}
+    for row in rows:
+        for key in [("piece", row["composition_id"]), ("family", composition_family(row))]:
+            previous = assignments.setdefault(key, row["split"])
+            if previous != row["split"]:
+                raise ValueError(f"Composition leakage: {key} appears in different splits")
+
+
 def compose(seed, level=6, instruments=None, strategy=None):
     if not 1 <= level <= 10:
         raise ValueError("Curriculum level must be 1..10")
