@@ -5,7 +5,7 @@ import math
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from .instruments import INSTRUMENTS
+from .instruments import DRUM_NAMES, INSTRUMENTS
 
 
 @dataclass
@@ -127,6 +127,8 @@ class Part:
     def __post_init__(self):
         if not self.id or self.instrument not in INSTRUMENTS:
             raise ValueError(f"Unknown instrument or empty part ID: {self.instrument}")
+        if self.instrument == "drum_kit" and any(n.pitch not in DRUM_NAMES for n in self.notes):
+            raise ValueError("Drum notation requires General MIDI percussion pitches 35..81")
 
 
 @dataclass
@@ -146,6 +148,8 @@ class Piece:
             raise ValueError("Part IDs must be unique")
         for name in ["tempo_map", "meter_map", "key_map"]:
             entries = getattr(self, name)
+            if name == "key_map" and not entries:
+                continue
             if (
                 not entries
                 or entries[0].time != 0

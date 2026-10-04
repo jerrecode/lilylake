@@ -1,0 +1,205 @@
+{
+  "loss": 0.3669149764658262,
+  "frame": {
+    "tp": 15171,
+    "fp": 8299,
+    "fn": 3058,
+    "precision": 0.6463996591393268,
+    "recall": 0.8322453233858138,
+    "f1": 0.7276433487613612,
+    "support": 18229
+  },
+  "onset": {
+    "tp": 443,
+    "fp": 319,
+    "fn": 241,
+    "precision": 0.5813648293963255,
+    "recall": 0.6476608187134503,
+    "f1": 0.6127247579529738,
+    "support": 684
+  },
+  "note_with_offset": {
+    "tp": 264,
+    "fp": 498,
+    "fn": 420,
+    "precision": 0.3464566929133858,
+    "recall": 0.38596491228070173,
+    "f1": 0.3651452282157676,
+    "support": 684
+  },
+  "per_instrument": {
+    "grand_piano": {
+      "onset": {
+        "tp": 402,
+        "fp": 197,
+        "fn": 146,
+        "precision": 0.671118530884808,
+        "recall": 0.7335766423357665,
+        "f1": 0.7009590235396687,
+        "support": 548
+      },
+      "note_with_offset": {
+        "tp": 243,
+        "fp": 356,
+        "fn": 305,
+        "precision": 0.4056761268781302,
+        "recall": 0.44343065693430656,
+        "f1": 0.4237140366172624,
+        "support": 548
+      }
+    },
+    "violin": {
+      "onset": {
+        "tp": 41,
+        "fp": 122,
+        "fn": 11,
+        "precision": 0.25153374233128833,
+        "recall": 0.7884615384615384,
+        "f1": 0.38139534883720927,
+        "support": 52
+      },
+      "note_with_offset": {
+        "tp": 21,
+        "fp": 142,
+        "fn": 31,
+        "precision": 0.12883435582822086,
+        "recall": 0.40384615384615385,
+        "f1": 0.19534883720930232,
+        "support": 52
+      }
+    },
+    "cello": {
+      "onset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 24,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 24
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 24,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 24
+      }
+    },
+    "drum_kit": {
+      "onset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      }
+    },
+    "acoustic_guitar": {
+      "onset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      }
+    },
+    "flute": {
+      "onset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 24,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 24
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 24,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 24
+      }
+    },
+    "trumpet": {
+      "onset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      }
+    }
+  },
+  "onset_mae_ms": 9.974899172310012,
+  "offset_mae_ms": 117.81360477802865,
+  "velocity_mae": 7.018058690744921,
+  "velocity_rmse": 8.748427785226228,
+  "compositions": 24,
+  "composition_ids": [
+    "critical:one_key",
+    "critical:all_88_keys",
+    "critical:adjacent_intervals",
+    "critical:chord_families",
+    "critical:dense_chords",
+    "critical:fast_repeated",
+    "critical:sustain_pedal",
+    "critical:arpeggio",
+    "critical:independent_hands",
+    "critical:violin",
+    "critical:violin_vibrato",
+    "critical:piano_violin",
+    "critical:piano_cello",
+    "critical:piano_drums",
+    "critical:guitar_flute",
+    "critical:ensemble",
+    "critical:soft",
+    "critical:loud",
+    "critical:noise",
+    "critical:heavy_reverb",
+    "critical:tempo_change",
+    "critical:tuplets",
+    "critical:dense_overlap",
+    "critical:same_pitch_sources"
+  ],
+  "checkpoint": "best.pt",
+  "split": "test"
+}

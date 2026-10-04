@@ -15,7 +15,7 @@ from .music.midi import read_midi
 from .music.schema import Piece
 
 
-def compile_score(source, output, timeout=90):
+def compile_score(source, output, timeout=90, require_midi=True):
     """Compile a trusted LilyPond source. LilyPond can execute Scheme code."""
     source = Path(source).resolve()
     output = Path(output).resolve()
@@ -25,27 +25,30 @@ def compile_score(source, output, timeout=90):
     binary = shutil.which("lilypond")
     if not binary:
         raise RuntimeError("LilyPond missing: install lilypond and put it on PATH")
+    # Remove outputs from earlier invocations so missing output cannot masquerade as success.
+    for suffix in [".midi", ".mid", ".pdf"]:
+        Path(str(output) + suffix).unlink(missing_ok=True)
     command = [binary, "-dno-point-and-click", "-o", str(output), str(source)]
     try:
         result = subprocess.run(
             command, capture_output=True, text=True, timeout=timeout, check=False
         )
     except subprocess.TimeoutExpired as e:
-        output.with_suffix(".compiler.log").write_text(str(e))
+        Path(str(output) + ".compiler.log").write_text(str(e))
         raise RuntimeError("LilyPond compile timed out") from e
     log = result.stdout + result.stderr
-    output.with_suffix(".compiler.log").write_text(log)
+    Path(str(output) + ".compiler.log").write_text(log)
     if result.returncode:
         raise RuntimeError(f"LilyPond failed ({result.returncode}): {log[-4000:]}")
-    midi = output.with_suffix(".midi")
+    midi = Path(str(output) + ".midi")
     if not midi.exists():
-        midi = output.with_suffix(".mid")
-    if not midi.exists():
+        midi = Path(str(output) + ".mid")
+    if require_midi and not midi.exists():
         raise RuntimeError("LilyPond produced no MIDI: score needs a \\midi block")
     return {
         "midi": midi,
-        "pdf": output.with_suffix(".pdf"),
-        "log": output.with_suffix(".compiler.log"),
+        "pdf": Path(str(output) + ".pdf"),
+        "log": Path(str(output) + ".compiler.log"),
     }
 
 

@@ -1,0 +1,93 @@
+{
+  "loss": 0.12045195326209068,
+  "frame": {
+    "tp": 3069,
+    "fp": 2496,
+    "fn": 401,
+    "precision": 0.5514824797843666,
+    "recall": 0.8844380403458213,
+    "f1": 0.6793580520199225,
+    "support": 3470
+  },
+  "onset": {
+    "tp": 80,
+    "fp": 73,
+    "fn": 31,
+    "precision": 0.5228758169934641,
+    "recall": 0.7207207207207207,
+    "f1": 0.606060606060606,
+    "support": 111
+  },
+  "note_with_offset": {
+    "tp": 59,
+    "fp": 94,
+    "fn": 52,
+    "precision": 0.38562091503267976,
+    "recall": 0.5315315315315315,
+    "f1": 0.44696969696969696,
+    "support": 111
+  },
+  "per_instrument": {
+    "grand_piano": {
+      "onset": {
+        "tp": 57,
+        "fp": 44,
+        "fn": 18,
+        "precision": 0.5643564356435643,
+        "recall": 0.76,
+        "f1": 0.6477272727272727,
+        "support": 75
+      },
+      "note_with_offset": {
+        "tp": 38,
+        "fp": 63,
+        "fn": 37,
+        "precision": 0.37623762376237624,
+        "recall": 0.5066666666666667,
+        "f1": 0.4318181818181818,
+        "support": 75
+      }
+    },
+    "violin": {
+      "onset": {
+        "tp": 23,
+        "fp": 29,
+        "fn": 13,
+        "precision": 0.4423076923076923,
+        "recall": 0.6388888888888888,
+        "f1": 0.5227272727272726,
+        "support": 36
+      },
+      "note_with_offset": {
+        "tp": 21,
+        "fp": 31,
+        "fn": 15,
+        "precision": 0.40384615384615385,
+        "recall": 0.5833333333333334,
+        "f1": 0.4772727272727273,
+        "support": 36
+      }
+    }
+  },
+  "onset_mae_ms": 11.020833333333375,
+  "offset_mae_ms": 61.62499166666669,
+  "velocity_mae": 8.7,
+  "velocity_rmse": 10.393507588874893,
+  "compositions": 12,
+  "composition_ids": [
+    "942d4a5a7f4e1b11a401",
+    "fea024b1e1b2c9292f2e",
+    "1ba43e729862d0c0fc66",
+    "ae52c99c11052a7b2c8d",
+    "0e1e6e0f9cc790201566",
+    "cb5585c166e718ef37f2",
+    "cf6f25a725a88363b654",
+    "c8a907204cdab2e2bdee",
+    "4d2d5674789a7d963c26",
+    "8f86a83b68ad667fe1b8",
+    "31a524becd6a526d37e2",
+    "6a722ee191a90afb6bfa"
+  ],
+  "checkpoint": "best.pt",
+  "split": "test"
+}

@@ -116,3 +116,12 @@ def test_decoder_one_event_per_contiguous_onset_region():
     piece = decode(pred, c)
     assert len(piece.parts[0].notes) == 1
     assert piece.parts[0].notes[0].onset == pytest.approx(0.07)
+
+
+def test_dataset_velocity_rmse_is_pooled_not_mean_of_piece_rmse():
+    from lilylake.training import aggregate_timing
+
+    errors = {"velocity_rmse": [(0.0, 1), (10.0, 1)], "velocity_mae": [(0.0, 1), (10.0, 1)]}
+    result = aggregate_timing(errors)
+    assert result["velocity_rmse"] == pytest.approx(np.sqrt(50))
+    assert result["velocity_mae"] == 5

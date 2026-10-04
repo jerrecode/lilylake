@@ -16,6 +16,7 @@ class Config:
     width: int = 24
     depth: int = 4
     instruments: list[str] = field(default_factory=lambda: ["grand_piano", "violin"])
+    bucket_batches: bool = True
     batch_size: int = 4
     learning_rate: float = 0.002
     scheduler_step: int = 100

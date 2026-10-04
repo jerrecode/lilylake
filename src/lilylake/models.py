@@ -8,12 +8,33 @@ from .config import Config
 from .music.instruments import INSTRUMENTS
 
 
+class StreamingGroupNorm(nn.GroupNorm):
+    """GroupNorm with optional whole-recording statistics for exact chunked inference.
+
+    State-dict parameters are identical to ordinary GroupNorm. Statistics are
+    temporary inference context, never learned parameters or checkpoint state.
+    """
+
+    statistics = None
+
+    def forward(self, x):
+        if self.statistics is None:
+            return super().forward(x)
+        mean, variance = self.statistics
+        batch, channels, frames, pitches = x.shape
+        groups = x.reshape(batch, self.num_groups, channels // self.num_groups, frames, pitches)
+        mean = mean.to(x).reshape(1, self.num_groups, 1, 1, 1)
+        variance = variance.to(x).reshape(1, self.num_groups, 1, 1, 1)
+        normalized = ((groups - mean) * torch.rsqrt(variance + self.eps)).reshape_as(x)
+        return normalized * self.weight[None, :, None, None] + self.bias[None, :, None, None]
+
+
 class ResidualBlock(nn.Module):
     def __init__(self, width, dilation):
         super().__init__()
         self.net = nn.Sequential(
             nn.Conv2d(width, width, (3, 3), padding=(dilation, 1), dilation=(dilation, 1)),
-            nn.GroupNorm(4, width),
+            StreamingGroupNorm(4, width),
             nn.SiLU(),
             nn.Conv2d(width, width, 1),
         )
@@ -28,7 +49,7 @@ class EventModel(nn.Module):
         self.config = config
         self.encoder = nn.Sequential(
             nn.Conv2d(config.harmonics * 2, config.width, 3, padding=1),
-            nn.GroupNorm(4, config.width),
+            StreamingGroupNorm(4, config.width),
             nn.SiLU(),
             *[ResidualBlock(config.width, 2 ** (i % 4)) for i in range(config.depth)],
         )

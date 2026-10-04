@@ -12,7 +12,9 @@ from collections import OrderedDict
 from pathlib import Path
 
 import numpy as np
+import soundfile as sf
 import torch
+from filelock import FileLock, Timeout
 from torch.utils.data import DataLoader, Dataset
 
 from .audio import features, load_audio
@@ -89,6 +91,16 @@ class MusicDataset(Dataset):
             self.cache_bytes += size
         return value
 
+    def duration_hints(self):
+        durations = []
+        for row in self.rows:
+            try:
+                info = sf.info(self.root / row["audio"])
+                durations.append(info.frames / info.samplerate)
+            except sf.LibsndfileError:
+                durations.append(1.0)
+        return durations
+
     @property
     def identities(self):
         return [r["composition_id"] for r in self.rows]
@@ -122,6 +134,12 @@ class OnlineDataset(MusicDataset):
                 self.rows.append({"seed": seed, "composition_id": pid, "level": self.level})
             seed += 1
 
+    def duration_hints(self):
+        return [
+            compose(row["seed"], row["level"], self.config.instruments).duration + 0.5
+            for row in self.rows
+        ]
+
     def _load(self, index):
         row = self.rows[index]
         piece = compose(row["seed"], row["level"], self.config.instruments)
@@ -132,6 +150,31 @@ class OnlineDataset(MusicDataset):
             return Piece.load(result["events"]), load_audio(
                 result["audio"], self.config.sample_rate
             )
+
+
+class LengthBucketSampler:
+    """Seeded batches of similarly sized clips, with every index exactly once."""
+
+    def __init__(self, dataset, batch_size, generator):
+        self.count = len(dataset)
+        self.batch_size = batch_size
+        self.generator = generator
+        self.durations = dataset.duration_hints()
+
+    def __len__(self):
+        return (self.count + self.batch_size - 1) // self.batch_size
+
+    def __iter__(self):
+        order = torch.randperm(self.count, generator=self.generator).tolist()
+        batches = []
+        window = self.batch_size * 8
+        for start in range(0, self.count, window):
+            bucket = sorted(order[start : start + window], key=lambda i: self.durations[i])
+            batches.extend(
+                bucket[i : i + self.batch_size] for i in range(0, len(bucket), self.batch_size)
+            )
+        for i in torch.randperm(len(batches), generator=self.generator).tolist():
+            yield batches[i]
 
 
 def collate(batch):
@@ -149,6 +192,19 @@ def collate(batch):
         for k in y:
             y[k][i, :frames] = target[k]
     return x, y, time_mask, [p for _, _, p in batch]
+
+
+def aggregate_timing(timing):
+    result = {}
+    for key, values in timing.items():
+        count = sum(n for _, n in values)
+        if not count:
+            result[key] = None
+        elif key.endswith("rmse"):
+            result[key] = float(np.sqrt(sum(v * v * n for v, n in values) / count))
+        else:
+            result[key] = sum(v * n for v, n in values) / count
+    return result
 
 
 def evaluate_model(model, dataset, config, device="cpu"):
@@ -188,10 +244,7 @@ def evaluate_model(model, dataset, config, device="cpu"):
         "per_instrument": {
             name: {k: _metrics(*v) for k, v in values.items()} for name, values in per.items()
         },
-        **{
-            k: sum(v * n for v, n in values) / sum(n for _, n in values) if values else None
-            for k, values in timing.items()
-        },
+        **aggregate_timing(timing),
         "compositions": len(dataset),
         "composition_ids": dataset.identities,
     }
@@ -228,6 +281,37 @@ def train(
     resume=None,
     online_count=0,
     curriculum=False,
+    initialize=None,
+):
+    """Run with an exclusive output lock so concurrent trainers cannot corrupt checkpoints."""
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    lock = FileLock(str(output / ".training.lock"), timeout=0)
+    try:
+        with lock:
+            return _train(
+                manifest,
+                output,
+                config,
+                sanity_overfit,
+                resume,
+                online_count,
+                curriculum,
+                initialize,
+            )
+    except Timeout as error:
+        raise ValueError(f"Training already running in {output}") from error
+
+
+def _train(
+    manifest,
+    output,
+    config=None,
+    sanity_overfit=False,
+    resume=None,
+    online_count=0,
+    curriculum=False,
+    initialize=None,
 ):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
@@ -266,6 +350,14 @@ def train(
     if not sanity_overfit and set(training.identities) & set(validation.identities):
         raise ValueError("Composition leakage between train and validation")
     model = EventModel(config).to(device)
+    if initialize:
+        if state:
+            raise ValueError("Choose initialization or resume, not both")
+        initial = load_checkpoint(initialize)
+        for key in ["sample_rate", "n_fft", "hop", "harmonics", "width", "depth", "instruments"]:
+            if initial["config"][key] != config.to_dict()[key]:
+                raise ValueError(f"Initialization architecture mismatch: {key}")
+        model.load_state_dict(initial["model"])
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.StepLR(
         optimizer, step_size=config.scheduler_step, gamma=config.scheduler_gamma
@@ -295,6 +387,13 @@ def train(
         if device == "cuda" and state.get("cuda_rng") is not None:
             torch.cuda.set_rng_state_all(state["cuda_rng"])
     run = provenance(config)
+    run["initialized_from"] = (
+        str(initialize)
+        if initialize
+        else state.get("provenance", {}).get("initialized_from")
+        if state
+        else None
+    )
     run.update(
         {
             "sanity_overfit": sanity_overfit,
@@ -311,10 +410,14 @@ def train(
         if online_count:
             training.set_epoch(epoch, level)
             validation.set_epoch(0, level)
+        batching = (
+            {"batch_sampler": LengthBucketSampler(training, config.batch_size, generator)}
+            if config.bucket_batches
+            else {"batch_size": config.batch_size, "shuffle": True}
+        )
         loader = DataLoader(
             training,
-            batch_size=config.batch_size,
-            shuffle=True,
+            **batching,
             generator=generator,
             collate_fn=collate,
             num_workers=config.workers,

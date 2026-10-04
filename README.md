@@ -32,7 +32,7 @@ python -m lilylake transcribe recording.wav --checkpoint outputs/run/best.pt --o
 python -m lilylake render outputs/transcription/score.ly --output outputs/playback
 ```
 
-The sequence creates paired examples, trains, resumes from the last epoch, evaluates unseen compositions, transcribes audio and renders the generated notation. Transcription writes `score.ly`, `events.json` and `confidence.json`; validation also creates a PDF, MIDI and compiler log. The tempo option is currently an explicit notation assumption. Continuous seconds in the event JSON are preserved independently of quantization. Diagnostic SVG shows time horizontally and MIDI pitch vertically for each instrument.
+The sequence creates paired examples, trains, resumes from the last epoch, evaluates unseen compositions, transcribes audio and renders the generated notation. Transcription writes `score.ly`, `events.json` and `confidence.json`; validation also creates a PDF, MIDI and compiler log. The tempo option overrides conservative event-derived tempo estimation. Half/double-time alternatives and uncertain meter/key hypotheses are stored explicitly. Continuous seconds in the event JSON are preserved independently of quantization. Diagnostic SVG shows time horizontally and MIDI pitch vertically for each instrument.
 
 For sample-based synthesis use `--engine fluidsynth --soundfont /path/to/FluidR3_GM.sf2` with generation/render commands. The SoundFont SHA-256 is recorded. The procedural renderer is a deterministic educational additive synth, **not a realistic grand piano or bowed-string simulator**. Choosing FluidSynth never silently falls back to it.
 
@@ -53,6 +53,16 @@ See [specification](docs/superpowers/specs/2026-10-04-lilylake-design.md), [impl
 
 ## Honest limits
 
-A renderable instrument mapping is not an accurate trained instrument recognizer. The small baseline requires substantially more diverse data and training for real recordings, dense mixtures and reliable 88-key coverage. Sustain controls are represented/rendered but there is no learned pedal head yet. Bow direction, bow speed, articulation, continuous bends, glissando, soft pedal recognition, calibrated uncertainty, robust tempo/meter/key inference and source separation remain research work. Quantization favors rational durations and can still produce awkward engraving. Concert-pitch notation is used for transposing instruments.
+A renderable instrument mapping is not an accurate trained instrument recognizer. The small baseline requires substantially more diverse data and training for real recordings, dense mixtures and reliable 88-key coverage. Sustain controls are represented/rendered but there is no learned pedal head yet. Bow direction, bow speed, articulation, continuous bends, glissando, soft pedal recognition, calibrated uncertainty, robust tempo-change/meter/key inference and source separation remain research work. Quantization favors rational durations and can still produce awkward engraving. Concert-pitch notation is used for transposing instruments.
 
 Arbitrary LilyPond can execute Scheme: compile only sources you trust or run external scores inside an OS sandbox. Checkpoints use PyTorch's safe weights-only loader. External recordings and SoundFonts are not bundled. No copyrighted corpus is silently downloaded.
+
+## External local datasets and mixed domains
+
+`python -m lilylake import-maestro --root /path/to/maestro --metadata /path/to/maestro/maestro-v3.0.0.json --output outputs/maestro` imports an existing MAESTRO copy and records the CC BY-NC-SA 4.0 license. It enforces composition splits and rejects metadata paths outside the supplied root. No recording is downloaded or copied into Git.
+
+`python -m lilylake merge-data outputs/data/manifest.jsonl outputs/maestro/manifest.jsonl --output outputs/combined.jsonl` merges compatible event datasets while rejecting composition leakage. `train --initialize previous/best.pt` starts a new optimizer from existing acoustic weights; `--resume` restores an interrupted run including optimizer/RNG state.
+
+`python scripts/experiments.py --soundfont /path/to/FluidR3_GM.sf2` reproduces the small CPU experiment families. Reports are measurements rather than forced accuracy gates. See `docs/status.md` for gaps against the original full research objective.
+
+`python -m lilylake generate-hard-data --output outputs/hard --count 32 --seed 6000` creates independently seeded unison, violin-solo, dense-piano and crossing-voice examples. Named regression scores are not reused as training pieces. This is failure-driven data generation, not automated neural hard-example ranking.

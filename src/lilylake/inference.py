@@ -11,7 +11,7 @@ from .config import Config
 from .lilypond import serialize
 from .models import EventModel
 from .music.instruments import INSTRUMENTS
-from .music.schema import Note, Part, Piece, Tempo
+from .music.schema import Key, Meter, Note, Part, Piece, Tempo
 
 
 def select_device(request="auto"):
@@ -90,6 +90,8 @@ def decode(prediction, config: Config, duration=None):
             starts = np.flatnonzero(edges == 1)
             stops = np.flatnonzero(edges == -1)
             peaks = {int(a + np.argmax(onset[a:b, i, pitch])) for a, b in zip(starts, stops)}
+            if not peaks:
+                continue
             for t in range(frames):
                 # One strike per connected onset region; new separated regions permit re-strikes.
                 if t in peaks:
@@ -125,28 +127,79 @@ def decode(prediction, config: Config, duration=None):
 
 
 def predict_audio(model, audio, config, device="cpu"):
-    """Chunk with receptive-field context; concatenate frames before event decoding."""
+    """Match whole-clip predictions using bounded model windows.
+
+    GroupNorm sees whole-clip statistics during evaluation. Collect each norm's
+    statistics in successive streaming passes with earlier norms fixed, then
+    run the final windowed prediction pass. Waveform and returned probabilities
+    still scale with recording length; intermediate neural activations do not.
+    """
+    from .models import StreamingGroupNorm
+
     model.eval()
     hop = config.hop
     chunk_frames = max(1, int(config.chunk_seconds / config.frame_seconds))
     total_frames = len(audio) // hop + 1
     context = (config.n_fft // 2) // hop + 2 + sum(2 ** (i % 4) for i in range(config.depth)) + 2
-    outputs = {k: [] for k in ["onset", "offset", "frame", "velocity"]}
-    with torch.inference_mode():
+    norms = [m for m in model.modules() if isinstance(m, StreamingGroupNorm)]
+
+    def windows():
         for start in range(0, total_frames, chunk_frames):
             stop = min(total_frames, start + chunk_frames)
             left = max(0, start - context)
             right = min(total_frames, stop + context)
             segment = audio[left * hop : min(len(audio), right * hop)]
-            pred = model(features(segment, config).unsqueeze(0).to(device))
-            a = start - left
-            b = a + stop - start
-            for key in outputs:
-                outputs[key].append(pred[key][0, a:b].sigmoid().cpu().numpy())
-    return {k: np.concatenate(v, axis=0) for k, v in outputs.items()}
+            yield features(segment, config).unsqueeze(0).to(device), start - left, stop - left
+
+    class CapturedNorm(Exception):
+        pass
+
+    outputs = {k: [] for k in ["onset", "offset", "frame", "velocity"]}
+    try:
+        with torch.inference_mode():
+            if total_frames > chunk_frames:
+                for norm in norms:
+                    sums = torch.zeros(norm.num_groups, dtype=torch.float64)
+                    squared = torch.zeros_like(sums)
+                    count = 0
+                    for x, a, b in windows():
+                        captured = []
+
+                        def capture(module, inputs):
+                            captured.append(inputs[0][:, :, a:b].detach().cpu())
+                            raise CapturedNorm
+
+                        hook = norm.register_forward_pre_hook(capture)
+                        try:
+                            model.encoder(x)
+                        except CapturedNorm:
+                            pass
+                        finally:
+                            hook.remove()
+                        values = (
+                            captured[0]
+                            .reshape(
+                                1, norm.num_groups, norm.num_channels // norm.num_groups, b - a, 128
+                            )
+                            .double()
+                        )
+                        sums += values.sum(dim=(0, 2, 3, 4))
+                        squared += values.square().sum(dim=(0, 2, 3, 4))
+                        count += (norm.num_channels // norm.num_groups) * (b - a) * 128
+                    mean = sums / count
+                    variance = (squared / count - mean.square()).clamp_min(0)
+                    norm.statistics = (mean, variance)
+            for x, a, b in windows():
+                prediction = model(x)
+                for key in outputs:
+                    outputs[key].append(prediction[key][0, a:b].sigmoid().cpu().numpy())
+    finally:
+        for norm in norms:
+            norm.statistics = None
+    return {key: np.concatenate(value, axis=0) for key, value in outputs.items()}
 
 
-def transcribe_audio(audio_file, checkpoint, output, tempo=120.0, validate=True):
+def transcribe_audio(audio_file, checkpoint, output, tempo=None, validate=True):
     from .rendering import compile_score
     from .training import load_checkpoint
 
@@ -159,14 +212,24 @@ def transcribe_audio(audio_file, checkpoint, output, tempo=120.0, validate=True)
     audio = load_audio(audio_file, config.sample_rate)
     prediction = predict_audio(model, audio, config, device)
     piece = decode(prediction, config, len(audio) / config.sample_rate)
-    piece.tempo_map = [Tempo(0, tempo)]
+    from .music.infer import infer_notation
+
+    notation = infer_notation(piece, tempo)
+    piece.tempo_map = [Tempo(0, notation["tempo"]["bpm"])]
+    piece.meter_map = [Meter(0, notation["meter"]["numerator"], notation["meter"]["denominator"])]
+    piece.key_map = (
+        [Key(0, notation["key"]["tonic"], notation["key"]["mode"])]
+        if notation["key"]["tonic"]
+        else []
+    )
+    piece.metadata["notation_hypotheses"] = notation
     piece.metadata.update(
         {
             "source_audio": Path(audio_file).name,
             "checkpoint": Path(checkpoint).name,
-            "tempo_source": "user/default assumption",
-            "meter_source": "4/4 assumption",
-            "key_source": "C major placeholder, not inferred",
+            "tempo_source": notation["tempo"]["source"],
+            "meter_source": notation["meter"]["source"],
+            "key_source": notation["key"]["source"],
         }
     )
     output = Path(output)
@@ -177,9 +240,9 @@ def transcribe_audio(audio_file, checkpoint, output, tempo=120.0, validate=True)
     output.write_text(serialize(piece))
     confidence = {
         "calibrated": False,
-        "tempo": None,
-        "meter": None,
-        "key": None,
+        "tempo": notation["tempo"],
+        "meter": notation["meter"],
+        "key": notation["key"],
         "parts": {p.id: [n.confidence for n in p.notes] for p in piece.parts},
     }
     (output.parent / "confidence.json").write_text(json.dumps(confidence, indent=2) + "\n")

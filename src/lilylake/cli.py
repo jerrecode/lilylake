@@ -58,6 +58,9 @@ def parser():
     g.add_argument("--randomize", action="store_true")
     t = sub.add_parser("train", help="train or resume the multi-task neural model")
     t.add_argument("--manifest")
+    t.add_argument(
+        "--initialize", help="initialize weights for a new dataset without restoring its optimizer"
+    )
     t.add_argument("--output", required=True)
     t.add_argument("--config")
     t.add_argument("--epochs", type=int)
@@ -78,7 +81,7 @@ def parser():
     a.add_argument("audio")
     a.add_argument("--checkpoint", required=True)
     a.add_argument("-o", "--output", required=True)
-    a.add_argument("--tempo", type=float, default=120)
+    a.add_argument("--tempo", type=float, help="override heuristic tempo estimation")
     a.add_argument("--no-validate", action="store_true")
     a.add_argument("--diagnostics", action="store_true")
     v = sub.add_parser("validate", help="compile a trusted LilyPond source and save diagnostics")
@@ -100,6 +103,25 @@ def parser():
     s.add_argument("--output", required=True)
     s.add_argument("--engine", choices=["procedural", "fluidsynth"], default="procedural")
     s.add_argument("--soundfont")
+    merge = sub.add_parser(
+        "merge-data", help="combine aligned manifests while enforcing composition splits"
+    )
+    merge.add_argument("manifests", nargs="+")
+    merge.add_argument("--output", required=True)
+    external = sub.add_parser(
+        "import-maestro", help="import a locally licensed MAESTRO copy using official metadata"
+    )
+    external.add_argument("--root", required=True)
+    external.add_argument("--metadata", required=True)
+    external.add_argument("--output", required=True)
+    hard = sub.add_parser(
+        "generate-hard-data", help="render independent unison, solo-string and dense-piano failures"
+    )
+    hard.add_argument("--output", required=True)
+    hard.add_argument("--count", type=int, default=32)
+    hard.add_argument("--seed", type=int, default=6000)
+    hard.add_argument("--engine", choices=["procedural", "fluidsynth"], default="procedural")
+    hard.add_argument("--soundfont")
     return root
 
 
@@ -114,6 +136,12 @@ def main(argv=None):
     try:
         if args.command == "doctor":
             print(json.dumps(doctor(), indent=2))
+        elif args.command == "generate-hard-data":
+            from .hard_examples import generate_hard_dataset
+
+            if args.count < 1:
+                raise ValueError("--count must be positive")
+            generate_hard_dataset(args.output, args.count, args.seed, args.engine, args.soundfont)
         elif args.command == "generate-data":
             from .data import generate_dataset
 
@@ -153,6 +181,7 @@ def main(argv=None):
                 args.resume,
                 args.online_examples,
                 args.curriculum,
+                args.initialize,
             )
         elif args.command == "evaluate":
             from .inference import select_device
@@ -196,7 +225,7 @@ def main(argv=None):
         elif args.command == "validate":
             from .rendering import compile_score
 
-            result = compile_score(args.score, args.output)
+            result = compile_score(args.score, args.output, require_midi=False)
             print(json.dumps({k: str(v) for k, v in result.items()}))
         elif args.command == "render":
             from .rendering import compile_score, render_midi
@@ -247,6 +276,21 @@ def main(argv=None):
             }
             _dump(args.output, report)
             print(json.dumps(report, indent=2))
+        elif args.command == "merge-data":
+            from .adapters import merge_manifests
+
+            print(json.dumps({"examples": len(merge_manifests(args.manifests, args.output))}))
+        elif args.command == "import-maestro":
+            from .adapters import import_maestro
+
+            print(
+                json.dumps(
+                    {
+                        "examples": len(import_maestro(args.root, args.metadata, args.output)),
+                        "license": "CC-BY-NC-SA-4.0",
+                    }
+                )
+            )
         elif args.command == "regression-suite":
             from .suite import generate_suite
 

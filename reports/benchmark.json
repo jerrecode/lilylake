@@ -1,0 +1,69 @@
+{
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.14.1+cpu",
+    "cpu_count": 9,
+    "memory": {
+      "MemTotal": 10451464192,
+      "MemAvailable": 9056305152
+    },
+    "disk_free_bytes": 28816052224,
+    "cuda": false,
+    "mps": false,
+    "cuda_devices": [],
+    "tools": {
+      "lilypond": "/workspace/scratch/0ff48ba4773c/toolchain/bin/lilypond",
+      "fluidsynth": "/workspace/scratch/0ff48ba4773c/toolchain/bin/fluidsynth",
+      "ffmpeg": "/usr/bin/ffmpeg"
+    }
+  },
+  "config": {
+    "sample_rate": 16000,
+    "n_fft": 4096,
+    "hop": 160,
+    "harmonics": 6,
+    "width": 24,
+    "depth": 4,
+    "instruments": [
+      "grand_piano",
+      "violin"
+    ],
+    "batch_size": 4,
+    "learning_rate": 0.002,
+    "epochs": 30,
+    "seed": 42,
+    "threads": 2,
+    "workers": 0,
+    "device": "auto",
+    "mixed_precision": false,
+    "accumulation": 1,
+    "gradient_clip": 3.0,
+    "cache_mb": 512,
+    "onset_threshold": 0.5,
+    "frame_threshold": 0.5,
+    "offset_threshold": 0.5,
+    "release_frames": 3,
+    "min_note_seconds": 0.03,
+    "chunk_seconds": 20.0,
+    "validation_interval": 5,
+    "curriculum_gate": 0.8
+  },
+  "parameters": 26288,
+  "runs": [
+    {
+      "feature_seconds": 0.006188606000023356,
+      "model_seconds": 0.04045968300010827,
+      "realtime_factor": 0.015549429666710543
+    },
+    {
+      "feature_seconds": 0.005119112000102177,
+      "model_seconds": 0.03460868299998765,
+      "realtime_factor": 0.013242598333363276
+    },
+    {
+      "feature_seconds": 0.0047601849998955,
+      "model_seconds": 0.03421004599999833,
+      "realtime_factor": 0.012990076999964609
+    }
+  ]
+}

@@ -90,3 +90,43 @@ def test_generated_pairs_and_manifest(tmp_path):
         for file in ["audio.wav", "score.ly", "score.midi", "events.json", "metadata.json"]:
             assert (folder / file).exists()
         assert Piece.load(folder / "events.json").duration > 0
+
+
+def test_valid_layout_only_score_does_not_reuse_stale_midi(tmp_path):
+    if not shutil.which("lilypond"):
+        pytest.skip("LilyPond not installed")
+    source = tmp_path / "layout.ly"
+    source.write_text('\\version "2.24.3"\n\\score { { c\'4 } \\layout {} }')
+    (tmp_path / "out.midi").write_bytes(b"stale unrelated MIDI")
+    with pytest.raises(RuntimeError, match="no MIDI"):
+        compile_score(source, tmp_path / "out")
+    assert not (tmp_path / "out.midi").exists()
+    assert compile_score(source, tmp_path / "valid", require_midi=False)["pdf"].exists()
+
+
+def test_all_general_midi_drums_roundtrip_correct_pitch(tmp_path):
+    if not shutil.which("lilypond"):
+        pytest.skip("LilyPond not installed")
+    p = Piece(
+        [
+            Part(
+                "drums",
+                "drum_kit",
+                [Note(p, (p - 35) * 0.125, (p - 35) * 0.125 + 0.1) for p in range(35, 82)],
+            )
+        ]
+    )
+    result = render_piece(p, tmp_path)
+    truth = Piece.load(result["events"])
+    assert sorted(n.pitch for part in truth.parts for n in part.notes) == list(range(35, 82))
+
+
+def test_hard_example_unisons_preserve_both_sources():
+    from lilylake.hard_examples import compose_hard
+
+    p = compose_hard(6000, "unison")
+    assert p.to_dict() == compose_hard(6000, "unison").to_dict()
+    assert len(p.parts) == 2
+    assert all(n.pitch != 60 for part in p.parts for n in part.notes)
+    assert {n.pitch for n in p.parts[0].notes} == {n.pitch for n in p.parts[1].notes}
+    assert all(a.offset != b.offset for a, b in zip(p.parts[0].notes, p.parts[1].notes))

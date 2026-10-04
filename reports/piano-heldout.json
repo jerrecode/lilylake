@@ -1,0 +1,90 @@
+{
+  "loss": 0.028276262804865837,
+  "frame": {
+    "tp": 403,
+    "fp": 17,
+    "fn": 7,
+    "precision": 0.9595238095238096,
+    "recall": 0.9829268292682927,
+    "f1": 0.9710843373493976,
+    "support": 410
+  },
+  "onset": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "support": 9
+  },
+  "note_with_offset": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "support": 9
+  },
+  "per_instrument": {
+    "grand_piano": {
+      "onset": {
+        "tp": 9,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 9
+      },
+      "note_with_offset": {
+        "tp": 9,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 9
+      }
+    },
+    "violin": {
+      "onset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "note_with_offset": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      }
+    }
+  },
+  "onset_mae_ms": 5.308592592592592,
+  "offset_mae_ms": 23.086518518518517,
+  "velocity_mae": 10.666666666666666,
+  "velocity_rmse": 11.841546445554409,
+  "compositions": 9,
+  "composition_ids": [
+    "942d4a5a7f4e1b11a401",
+    "fea024b1e1b2c9292f2e",
+    "1ba43e729862d0c0fc66",
+    "ae52c99c11052a7b2c8d",
+    "0e1e6e0f9cc790201566",
+    "cb5585c166e718ef37f2",
+    "cf6f25a725a88363b654",
+    "c8a907204cdab2e2bdee",
+    "4d2d5674789a7d963c26"
+  ],
+  "checkpoint": "best.pt",
+  "split": "test"
+}

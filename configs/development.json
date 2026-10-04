@@ -9,6 +9,7 @@
     "grand_piano",
     "violin"
   ],
+  "bucket_batches": true,
   "batch_size": 8,
   "learning_rate": 0.002,
   "scheduler_step": 100,

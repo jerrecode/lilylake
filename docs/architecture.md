@@ -3,7 +3,7 @@
 ## Performance schema v1
 `Piece` has unique-ID parts, strictly ordered tempo/meter/key maps beginning at zero, title and metadata. Every `Note` contains integer MIDI pitch 0..127, continuous seconds onset/offset, MIDI velocity 1..127, per-field confidence, optional articulation and expression dictionary. `Pedal` supports CC64 sustain, CC66 sostenuto and CC67 soft pedal. Notes must have positive finite duration. `Part.instrument` selects a taxonomy entry, not a quality guarantee. Serialization to JSON preserves original performance timing.
 
-`quantize` produces a separate `Score` with rational quarter-note beats. Exactly aligned note durations merge into chords; interval coloring separates different overlaps. Piano pitch below MIDI60 enters bass staff. The serializer writes readable standard durations/dots where possible and exact scaled duration notation otherwise. Full tuplet grouping and harmonic spelling remain improvements. All original continuous events remain available regardless of notation.
+`quantize` produces a separate `Score` with rational quarter-note beats. Exactly aligned note durations merge into chords; interval coloring separates different overlaps. Duration-bucketed training batches avoid paying for excessive zero padding while preserving every sample and seeded ordering. Piano pitch below MIDI60 enters bass staff. The serializer writes readable standard durations/dots where possible and exact scaled duration notation otherwise. Full tuplet grouping and harmonic spelling remain improvements. All original continuous events remain available regardless of notation.
 
 ## Acoustic tensors
 Features: batch x 2*harmonics x frames x 128. Log STFT amplitudes are sampled at each pitch's harmonics; above-Nyquist harmonics are masked. Outputs: batch x frames x instruments x 128 for each head. Separate axes allow piano C4 and violin C4 concurrently. Piano valid pitch mask is 21..108. No top-k cap limits polyphony. Fixed FFT compromises frequency vs time resolution; change `n_fft`, `hop` or add a multi-resolution frontend for serious bass work.
@@ -18,3 +18,5 @@ Losses mask instrument pitch ranges and padded times. Velocity regression is sup
 
 ## Evaluation
 Maximum-cardinality one-to-one matching requires identical MIDI pitch and instrument and 50 ms onset tolerance. Offset tolerance is max(50 ms,20% reference duration). Duplicate predictions count as false positives. Empty reference/prediction returns zero F1 with zero support. Frame metrics are distinct from note metrics. Successful compiler syntax is distinct from musical or acoustic accuracy.
+
+Long-file inference computes full-recording GroupNorm moments in successive windowed passes, then uses those fixed moments during prediction. This matches whole-file evaluation without retaining full neural activations. The input waveform and returned probability matrices still grow with recording length; very long files need additional streaming event/output work.

@@ -99,7 +99,7 @@ def serialize(piece: Piece, subdivisions=(1, 2, 3, 4, 6, 8)):
             for a, b in segments(cursor, n.onset):
                 if b > a:
                     tokens.append("r" + duration_token(b - a))
-            names = [DRUM_NAMES.get(p, "sn") if drums else pitch_name(p) for p in n.pitches]
+            names = [DRUM_NAMES[p] if drums else pitch_name(p) for p in n.pitches]
             note = names[0] if len(names) == 1 else "<" + " ".join(names) + ">"
             spans = segments(n.onset, n.onset + n.duration)
             for j, (a, b) in enumerate(spans):
