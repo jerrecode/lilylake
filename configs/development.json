@@ -1,0 +1,33 @@
+{
+  "sample_rate": 16000,
+  "n_fft": 4096,
+  "hop": 160,
+  "harmonics": 4,
+  "width": 16,
+  "depth": 2,
+  "instruments": [
+    "grand_piano",
+    "violin"
+  ],
+  "batch_size": 8,
+  "learning_rate": 0.002,
+  "scheduler_step": 100,
+  "scheduler_gamma": 0.7,
+  "epochs": 60,
+  "seed": 42,
+  "threads": 2,
+  "workers": 0,
+  "device": "auto",
+  "mixed_precision": false,
+  "accumulation": 1,
+  "gradient_clip": 3.0,
+  "cache_mb": 512,
+  "onset_threshold": 0.5,
+  "frame_threshold": 0.5,
+  "offset_threshold": 0.5,
+  "release_frames": 3,
+  "min_note_seconds": 0.03,
+  "chunk_seconds": 20.0,
+  "validation_interval": 10,
+  "curriculum_gate": 0.8
+}

@@ -1,0 +1,9 @@
+{
+  "verified_on": "2026-10-04",
+  "datasets": [
+    {"id":"lilylake-procedural","license":"original-generated","source":"src/lilylake/data.py","bundled_external_material":false,"downloaded":false},
+    {"id":"maestro-v3","license":"CC-BY-NC-SA-4.0","source":"https://magenta.withgoogle.com/datasets/maestro","commercial_use":false,"downloaded":false,"notes":"Use official composition splits; comply with attribution/noncommercial/share-alike terms."},
+    {"id":"slakh2100","license":"CC-BY-4.0","source":"https://www.slakh.com/","downloaded":false,"notes":"Provider-stated license. Inspect underlying MIDI provenance and retain attribution before incorporation."}
+  ],
+  "soundfonts": [{"id":"FluidR3_GM","source":"Ubuntu fluid-soundfont-gm 3.1-5.3","license":"MIT (distribution copyright file)","bundled":false,"notes":"Local development installation; font SHA recorded per render. Verify the license of each additional user-supplied font."}]
+}
