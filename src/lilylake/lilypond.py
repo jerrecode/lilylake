@@ -1,10 +1,11 @@
 """Deterministic engraving of derived scores; syntax authority is LilyPond itself."""
 
+from dataclasses import replace
 from fractions import Fraction
 
 from .music.instruments import DRUM_NAMES, INSTRUMENTS
 from .music.notation import assign_voices, quantize, seconds_to_beats
-from .music.schema import Piece
+from .music.schema import Piece, Tempo
 
 
 def pitch_name(pitch):
@@ -30,6 +31,11 @@ def _quoted(text):
 
 
 def serialize(piece: Piece, subdivisions=(1, 2, 3, 4, 6, 8)):
+    # LilyPond 2.24's MIDI performer uses integer quarter-note BPM, even when
+    # tempoWholesPerMinute is set to a rational moment. Quantize this derived
+    # notation with its actual playback tempos to prevent cumulative timing drift.
+    # The caller's continuous events and inferred fractional tempos stay intact.
+    piece = replace(piece, tempo_map=[Tempo(t.time, max(1, round(t.bpm))) for t in piece.tempo_map])
     score = quantize(piece, subdivisions)
     # Zero-duration streams produce no compiler MIDI. Keep a silent measure for empty output.
     if score.end == 0:

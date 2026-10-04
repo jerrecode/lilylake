@@ -42,6 +42,8 @@ python -m lilylake render outputs/transcription/score.ly --output outputs/playba
 
 The sequence creates paired examples, trains, resumes from the last epoch, evaluates unseen compositions, transcribes audio and renders the generated notation. Transcription writes `score.ly`, `events.json` and `confidence.json`; validation also creates a PDF, MIDI and compiler log. The tempo option overrides conservative event-derived tempo estimation. Half/double-time alternatives and uncertain meter/key hypotheses are stored explicitly. Continuous seconds in the event JSON are preserved independently of quantization. Diagnostic SVG shows time horizontally and MIDI pitch vertically for each instrument.
 
+LilyPond 2.24 MIDI playback uses integer quarter-note tempos. Score quantization uses those same rounded tempos to prevent cumulative playback drift; the inferred fractional tempo and original event times remain in `events.json`.
+
 For sample-based synthesis use `--engine fluidsynth --soundfont /path/to/FluidR3_GM.sf2` with generation/render commands. The SoundFont SHA-256 is recorded. The procedural renderer is a deterministic educational additive synth, **not a realistic grand piano or bowed-string simulator**. Choosing FluidSynth never silently falls back to it.
 
 ```bash

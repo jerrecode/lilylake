@@ -6,8 +6,32 @@ import soundfile as sf
 
 from lilylake.data import augment, compose, generate_dataset, split_for
 from lilylake.lilypond import serialize
+from lilylake.music.midi import read_midi
 from lilylake.music.schema import Meter, Note, Part, Pedal, Piece, Tempo
 from lilylake.rendering import compile_score, render_piece, synthesize
+
+
+@pytest.mark.parametrize(
+    "tempos,onset,offset",
+    [
+        ([Tempo(0, 60 / 0.46)], 119.6, 120.06),
+        ([Tempo(0, 60 / 0.46), Tempo(46, 60 / 0.66)], 112.0, 112.66),
+    ],
+)
+def test_fractional_tempos_do_not_accumulate_compiler_midi_drift(tmp_path, tempos, onset, offset):
+    """Rounding playback BPM must not shift late notes by hundreds of milliseconds."""
+    if not shutil.which("lilypond"):
+        pytest.skip("LilyPond not installed")
+    piece = Piece([Part("p", "grand_piano", [Note(60, onset, offset)])], tempo_map=tempos)
+    original = piece.to_dict()
+    source = tmp_path / "fractional.ly"
+    source.write_text(serialize(piece))
+    compiled = read_midi(compile_score(source, tmp_path / "fractional")["midi"])
+    note = compiled.parts[0].notes[0]
+    # Allow the existing eighth-beat quantization error, not accumulating drift.
+    assert note.onset == pytest.approx(onset, abs=0.03)
+    assert note.offset == pytest.approx(offset, abs=0.03)
+    assert piece.to_dict() == original
 
 
 def test_compiler_88_keys_and_polyphony(tmp_path):
