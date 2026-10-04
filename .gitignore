@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+outputs/
+data/
+checkpoints/
+*.wav
+*.pdf
+*.mid
+*.midi
+*.pt
+!examples/development.pt

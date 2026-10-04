@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lilylake"
+version = "0.1.0"
+description = "Trainable multi-instrument audio transcription with deterministic LilyPond engraving"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.24", "scipy>=1.10", "torch>=2.2", "soundfile>=0.12", "mido>=1.3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+lilylake = "lilylake.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
